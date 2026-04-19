@@ -20,13 +20,13 @@
 
 ```bash
 # 원격지 URL을 방금 생성한 저장소로 변경
-git remote set-url origin https://github.com/YOUR_USERNAME/battle-tetris.git
+git remote set-url origin https://github.com/jays-visionAI/battle-tetris.git
 
 # 푸시
 git push -u origin main
 ```
 
-**`YOUR_USERNAME`을 실제 GitHub 사용자명으로 교체하세요!**
+**`jays-visionAI`을 실제 GitHub 사용자명으로 교체하세요!**
 
 ---
 

@@ -8,7 +8,7 @@ git init
 git add .
 git commit -m "Battle Tetris game"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/battle-tetris.git
+git remote add origin https://github.com/jays-visionAI/battle-tetris.git
 git push -u origin main
 ```
 
@@ -78,7 +78,7 @@ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # 프로젝트 복사
-git clone https://github.com/YOUR_USERNAME/battle-tetris.git
+git clone https://github.com/jays-visionAI/battle-tetris.git
 cd battle-tetris
 npm install
 
