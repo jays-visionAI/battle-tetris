@@ -20,13 +20,19 @@ GitHub에 코드 푸시 → Render.com에서 호스팅 → 친구와 함께 플�
 
 ## 2단계: 원격지 URL 변경 및 푸시
 
-GitHub에서 저장소를 만들면 **페이지 상단의 코드 버튼**을 클릭하면 URL을 복사할 수 있습니다.
+GitHub에서 저장소를 만들면 **페이지 상단의 "Clone" 버튼**을 클릭하면 HTTPS URL을 복사할 수 있습니다.
+
+**GitHub 저장소를 먼저 생성한 후**, 아래 명령어를 순서대로 실행하세요:
 
 ```bash
-# 원격지 URL 변경 (YOUR_USERNAME을 실제 GitHub 아이디로 교체)
+# 1단계: 원격지 URL 변경 (YOUR_USERNAME을 실제 GitHub 아이디로 교체)
 git remote set-url origin https://github.com/YOUR_USERNAME/battle-tetris.git
 
-# GitHub에 푸시
+# 2단계: 확인
+git remote -v
+# 출력: origin  https://github.com/YOUR_USERNAME/battle-tetris.git (fetch)
+
+# 3단계: 푸시
 git push -u origin main
 ```
 
