@@ -1,5 +1,7 @@
-import { Server, Socket } from 'socket.io';
+import express from 'express';
+import path from 'path';
 import { createServer } from 'http';
+import { Server, Socket } from 'socket.io';
 
 interface Player {
   id: string;
@@ -54,12 +56,22 @@ function cleanupRoom(roomId: string): void {
   }
 }
 
-const httpServer = createServer();
+const app = express();
+const httpServer = createServer(app);
+
+// Socket.IO 서버 설정
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
+    origin: process.env.CLIENT_URL || '*',
+    methods: ['GET', 'POST'],
+  },
+});
+
+app.use(express.static(path.join(__dirname, '../dist/client')));
+
+// 프로덕션에서 SPA fallback
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/client/index.html'));
 });
 
 io.on('connection', (socket: Socket) => {
@@ -215,6 +227,7 @@ const PORT = process.env.PORT || 3001;
 
 httpServer.listen(PORT, () => {
   console.log(`🎮 Battle Tetris server running on port ${PORT}`);
+  console.log(`📦 Client files served from: ${path.join(__dirname, '../dist/client')}`);
 });
 
 export { io, rooms };
