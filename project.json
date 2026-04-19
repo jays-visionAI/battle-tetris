@@ -1,0 +1,32 @@
+{
+  "profile": {
+    "id": "cbf40b95-a975-4618-b847-9381b5ff8533",
+    "name": "sol2",
+    "description": "",
+    "project_type": "web_app",
+    "industry": "other",
+    "skill_level": "beginner",
+    "created_at": "2026-04-19T05:40:26.147Z",
+    "updated_at": "2026-04-19T05:40:26.147Z"
+  },
+  "goals": [],
+  "roles": [],
+  "features": [],
+  "screens": [],
+  "flows": [],
+  "components": [],
+  "data_entities": [],
+  "apis": [],
+  "integrations": [],
+  "workstreams": [],
+  "milestones": [],
+  "open_questions": [],
+  "conflicts": [],
+  "design_tokens": [],
+  "deployment_targets": [],
+  "discovery_state": "not_started",
+  "discovery_completion_score": 0,
+  "active_blueprint_view": "screen",
+  "version": 1,
+  "last_saved_at": "2026-04-19T05:40:26.147Z"
+}
