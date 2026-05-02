@@ -72,7 +72,8 @@ export function Game({ playerId, roomId }: GameProps) {
   }, [socket, playerId]);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3001', {
+    const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || '';
+    const newSocket = io(SOCKET_URL, {
       transports: ['websocket', 'polling'],
     });
 

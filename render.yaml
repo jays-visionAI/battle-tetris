@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: battle-tetris
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000
+      - key: VITE_SOCKET_URL
+        value: ""

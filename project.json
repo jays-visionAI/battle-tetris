@@ -1,13 +1,13 @@
 {
   "profile": {
     "id": "cbf40b95-a975-4618-b847-9381b5ff8533",
-    "name": "sol2",
+    "name": "배틀테트리스",
     "description": "",
     "project_type": "web_app",
     "industry": "other",
     "skill_level": "beginner",
     "created_at": "2026-04-19T05:40:26.147Z",
-    "updated_at": "2026-04-19T05:40:26.147Z"
+    "updated_at": "2026-04-20T22:56:43.779Z"
   },
   "goals": [],
   "roles": [],
@@ -28,5 +28,5 @@
   "discovery_completion_score": 0,
   "active_blueprint_view": "screen",
   "version": 1,
-  "last_saved_at": "2026-04-19T05:40:26.147Z"
+  "last_saved_at": "2026-04-20T22:56:43.779Z"
 }

@@ -19,7 +19,8 @@ export default function Lobby() {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3001', {
+    const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || '';
+    const newSocket = io(SOCKET_URL, {
       transports: ['websocket', 'polling'],
       timeout: 5000,
     });

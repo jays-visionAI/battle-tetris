@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "server": "tsx server/index.ts",
-    "start": "npm run build && node server/index.js",
+    "start": "npm run build && npx tsx server/index.ts",
     "dev:full": "npm run server & npm run dev"
   },
   "dependencies": {

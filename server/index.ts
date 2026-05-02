@@ -1,7 +1,11 @@
 import express from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface Player {
   id: string;
@@ -67,11 +71,13 @@ const io = new Server(httpServer, {
   },
 });
 
-app.use(express.static(path.join(__dirname, '../dist/client')));
+// 프로덕션: 빌드된 클라이언트 파일 제공
+const clientDistPath = path.join(__dirname, '../dist/client');
+app.use(express.static(clientDistPath));
 
-// 프로덕션에서 SPA fallback
+// 프로덕션에서 SPA fallback — 모든 경로를 index.html로
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/client/index.html'));
+  res.sendFile(path.join(clientDistPath, 'index.html'));
 });
 
 io.on('connection', (socket: Socket) => {
