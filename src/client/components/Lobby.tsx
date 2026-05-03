@@ -16,6 +16,7 @@ interface RoomInfo {
 
 interface LobbyProps {
   socket: Socket | null;
+  connectionStatus?: 'connecting' | 'connected' | 'error';
   initialPlayerName?: string;
   serverUrl?: string;
   onSettingsChange?: (settings: { serverUrl?: string; playerName?: string }) => void;
@@ -71,7 +72,7 @@ function SkullIcon() {
   );
 }
 
-export default function Lobby({ socket, initialPlayerName = '', serverUrl = '', onSettingsChange, onLeaveRoom }: LobbyProps) {
+export default function Lobby({ socket, connectionStatus, initialPlayerName = '', serverUrl = '', onSettingsChange, onLeaveRoom }: LobbyProps) {
   const [playerName, setPlayerName] = useState(initialPlayerName);
   const [roomId, setRoomId] = useState('');
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
@@ -85,6 +86,16 @@ export default function Lobby({ socket, initialPlayerName = '', serverUrl = '', 
   const [showSettings, setShowSettings] = useState(false);
   const [settingsServerUrl, setSettingsServerUrl] = useState(serverUrl || '');
   const [gameStarted, setGameStarted] = useState(false);
+
+  // Sync connectionStatus prop into local state
+  useEffect(() => {
+    if (connectionStatus === 'connected') {
+      setConnected(true);
+      setError(null);
+    } else if (connectionStatus === 'error') {
+      setConnected(false);
+    }
+  }, [connectionStatus]);
 
   useEffect(() => {
     if (!socket) return;

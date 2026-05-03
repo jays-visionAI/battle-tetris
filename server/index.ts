@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
@@ -89,6 +90,11 @@ const io = new Server(httpServer, {
     origin: process.env.CLIENT_URL || '*',
     methods: ['GET', 'POST'],
   },
+  // Render.com 환경에서 WebSocket 연결 안정성 향상
+  pingTimeout: 60000,
+  pingInterval: 25000,
+  transports: ['websocket', 'polling'],
+  allowEIO3: true,
 });
 
 // Health check 엔드포인트 (Render.com 로드밸런서용)
@@ -101,7 +107,28 @@ app.get('/health', (_req, res) => {
 });
 
 // 프로덕션: 빌드된 클라이언트 파일 제공
-const clientDistPath = path.join(__dirname, '../dist/client');
+// 여러 가능한 경로를 시도하여 dist/client 디렉토리 찾기
+const possiblePaths = [
+  path.join(__dirname, '../dist/client'),       // 개발 환경 (server/index.ts → dist/client)
+  path.join(__dirname, '../../dist/client'),     // Render.com 배포 환경
+  path.join(process.cwd(), 'dist/client'),       // 현재 작업 디렉토리 기준
+];
+
+let clientDistPath = '';
+for (const p of possiblePaths) {
+  if (fs.existsSync(p)) {
+    clientDistPath = p;
+    break;
+  }
+}
+
+if (!clientDistPath) {
+  // 기본값 설정
+  clientDistPath = path.join(__dirname, '../dist/client');
+}
+
+console.log(`[Server] 클라이언트 파일 제공 경로: ${clientDistPath}`);
+
 app.use(express.static(clientDistPath));
 
 // 프로덕션에서 SPA fallback — 모든 경로를 index.html로
@@ -110,7 +137,7 @@ app.get('*', (req, res) => {
 });
 
 io.on('connection', (socket: Socket) => {
-  console.log(`클라이언트 연결됨: ${socket.id}`);
+  console.log(`[Server] 클라이언트 연결됨: ${socket.id}`);
 
   let currentRoomId: string | null = null;
 
@@ -133,7 +160,7 @@ io.on('connection', (socket: Socket) => {
     room.players.set(socket.id, player);
     socket.join(room.id);
 
-    console.log(`플레이어 ${player.name}(${socket.id}) 방 ${room.id} 입장`);
+    console.log(`[Server] 플레이어 ${player.name}(${socket.id}) 방 ${room.id} 입장`);
 
     const playersInRoom = Array.from(room.players.values()).map(p => ({
       id: p.id,
@@ -151,10 +178,10 @@ io.on('connection', (socket: Socket) => {
 
     if (room.players.size === 2 && !room.gameStarted) {
       room.gameStarted = true;
+      console.log(`[Server] 게임 시작! 방 ${room.id}`);
       io.to(room.id).emit('game_start', {
         players: playersInRoom,
       });
-      console.log(`게임 시작! 방 ${room.id}`);
     } else {
       socket.emit('waiting', { roomId: room.id });
       socket.to(room.id).emit('player_joined', {
@@ -175,7 +202,7 @@ io.on('connection', (socket: Socket) => {
     socket.leave(currentRoomId);
 
     if (player) {
-      console.log(`플레이어 ${player.name}(${socket.id}) 방 ${currentRoomId} 퇴장`);
+      console.log(`[Server] 플레이어 ${player.name}(${socket.id}) 방 ${currentRoomId} 퇴장`);
       room.players.forEach((p) => {
         p.socket.emit('opponent_left', { name: player.name });
       });
@@ -194,7 +221,7 @@ io.on('connection', (socket: Socket) => {
     const room = rooms.get(currentRoomId);
     if (!room) return;
 
-    console.log(`플레이어 ${data.fromPlayerId}가 ${data.lines}줄 공격 전송`);
+    console.log(`[Server] 플레이어 ${data.fromPlayerId}가 ${data.lines}줄 공격 전송`);
     
     room.players.forEach((player) => {
       if (player.id !== data.fromPlayerId) {
@@ -268,7 +295,7 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log(`클라이언트 연결 해제: ${socket.id}`);
+    console.log(`[Server] 클라이언트 연결 해제: ${socket.id}`);
     
     if (currentRoomId) {
       const room = rooms.get(currentRoomId);
@@ -295,7 +322,7 @@ const PORT = process.env.PORT || 3001;
 
 httpServer.listen(PORT, () => {
   console.log(`🎮 Battle Tetris 서버 실행 중 (포트 ${PORT})`);
-  console.log(`📦 클라이언트 파일 제공 경로: ${path.join(__dirname, '../dist/client')}`);
+  console.log(`📦 클라이언트 파일 제공 경로: ${clientDistPath}`);
 });
 
 export { io, rooms };

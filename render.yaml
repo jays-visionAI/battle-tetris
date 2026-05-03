@@ -10,7 +10,5 @@ services:
         value: 20
       - key: PORT
         value: 10000
-      - key: VITE_SOCKET_URL
-        value: ""
       - key: CLIENT_URL
         value: "https://battle-tetris.onrender.com"
