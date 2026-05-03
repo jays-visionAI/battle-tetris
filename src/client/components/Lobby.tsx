@@ -16,6 +16,10 @@ interface RoomInfo {
 
 interface LobbyProps {
   socket: Socket | null;
+  initialPlayerName?: string;
+  serverUrl?: string;
+  onSettingsChange?: (settings: { serverUrl?: string; playerName?: string }) => void;
+  onLeaveRoom?: () => void;
 }
 
 function RoomListIcon() {
@@ -67,8 +71,8 @@ function SkullIcon() {
   );
 }
 
-export default function Lobby({ socket }: LobbyProps) {
-  const [playerName, setPlayerName] = useState('');
+export default function Lobby({ socket, initialPlayerName = '', serverUrl = '', onSettingsChange, onLeaveRoom }: LobbyProps) {
+  const [playerName, setPlayerName] = useState(initialPlayerName);
   const [roomId, setRoomId] = useState('');
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<string | null>(null);
@@ -78,31 +82,36 @@ export default function Lobby({ socket }: LobbyProps) {
   const [players, setPlayers] = useState<Player[]>([]);
   const [roomList, setRoomList] = useState<RoomInfo[]>([]);
   const [showRoomList, setShowRoomList] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
+  const [settingsServerUrl, setSettingsServerUrl] = useState(serverUrl || '');
+  const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
     if (!socket) return;
 
     const onConnect = () => {
-      console.log('서버에 연결됨');
+      console.log('[Lobby] 서버에 연결됨');
       setConnected(true);
       setError(null);
     };
 
-    const onConnectError = () => {
-      console.log('서버 연결 실패');
+    const onConnectError = (err: Error) => {
+      console.log('[Lobby] 서버 연결 실패:', err.message);
       setConnected(false);
     };
 
     const onDisconnect = () => {
-      console.log('서버 연결 해제');
+      console.log('[Lobby] 서버 연결 해제');
       setConnected(false);
     };
 
     const onRoomsList = (rooms: RoomInfo[]) => {
+      console.log('[Lobby] 방 목록 수신:', rooms.length, '개');
       setRoomList(rooms);
     };
 
     const onJoined = (data: { roomId: string; playerId: string; players: Player[] }) => {
+      console.log('[Lobby] 방 입장:', data.roomId);
       setCurrentRoomId(data.roomId);
       setPlayerId(data.playerId);
       setPlayers(data.players);
@@ -110,16 +119,20 @@ export default function Lobby({ socket }: LobbyProps) {
     };
 
     const onWaiting = () => {
+      console.log('[Lobby] 대기 중...');
       setIsWaiting(true);
     };
 
     const onPlayerJoined = (data: { playerId: string; playerName: string }) => {
+      console.log('[Lobby] 플레이어 입장:', data.playerName);
       setPlayers(prev => [...prev, { id: data.playerId, name: data.playerName }]);
     };
 
     const onGameStart = (data: { players: Player[] }) => {
+      console.log('[Lobby] 게임 시작!', data);
       setPlayers(data.players);
       setIsWaiting(false);
+      setGameStarted(true);
     };
 
     socket.on('connect', onConnect);
@@ -203,22 +216,32 @@ export default function Lobby({ socket }: LobbyProps) {
     ]);
     setIsWaiting(false);
     setShowRoomList(false);
+    setGameStarted(true);
   };
 
-  // 게임 화면으로 전환 - socket을 props로 전달
-  if (currentRoomId && playerId) {
+  const handleLeaveRoom = () => {
+    if (socket && connected) {
+      socket.emit('leave_room');
+    }
+    setCurrentRoomId(null);
+    setPlayerId(null);
+    setPlayers([]);
+    setIsWaiting(false);
+    setShowRoomList(true);
+    setGameStarted(false);
+    if (onLeaveRoom) {
+      onLeaveRoom();
+    }
+  };
+
+  // 게임 화면으로 전환
+  if (currentRoomId && playerId && gameStarted) {
     return (
       <Game 
         playerId={playerId} 
         roomId={currentRoomId} 
         socket={socket}
-        onLeaveRoom={() => {
-          setCurrentRoomId(null);
-          setPlayerId(null);
-          setPlayers([]);
-          setIsWaiting(false);
-          setShowRoomList(true);
-        }} 
+        onLeaveRoom={handleLeaveRoom}
       />
     );
   }
@@ -238,7 +261,45 @@ export default function Lobby({ socket }: LobbyProps) {
         <span style={styles.statusText}>
           {connected ? '서버 연결됨' : '데모 모드 (서버 연결 없음)'}
         </span>
+        <button 
+          style={styles.settingsButton}
+          onClick={() => setShowSettings(!showSettings)}
+          title="설정"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+        </button>
       </div>
+
+      {/* 설정 패널 */}
+      {showSettings && (
+        <div style={styles.settingsPanel}>
+          <h3 style={styles.settingsTitle}>설정</h3>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>서버 주소</label>
+            <input
+              type="text"
+              value={settingsServerUrl}
+              onChange={(e) => setSettingsServerUrl(e.target.value)}
+              placeholder="https://battle-tetris.onrender.com"
+              style={styles.input}
+            />
+          </div>
+          <button 
+            style={styles.saveButton}
+            onClick={() => {
+              if (onSettingsChange && settingsServerUrl !== serverUrl) {
+                onSettingsChange({ serverUrl: settingsServerUrl });
+              }
+              setShowSettings(false);
+            }}
+          >
+            설정 저장
+          </button>
+        </div>
+      )}
 
       <div style={styles.card}>
         <div style={styles.inputGroup}>
@@ -434,6 +495,46 @@ const styles: Record<string, React.CSSProperties> = {
   statusText: {
     fontSize: '12px',
     color: '#888',
+  },
+  settingsButton: {
+    marginLeft: 'auto',
+    padding: '6px',
+    backgroundColor: 'transparent',
+    border: '1px solid #333',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s',
+  },
+  settingsPanel: {
+    width: '100%',
+    maxWidth: '400px',
+    marginBottom: '20px',
+    padding: '20px',
+    backgroundColor: '#1a1a2e',
+    borderRadius: '12px',
+    border: '2px solid #00ffff',
+    animation: 'slideUp 0.3s ease-out',
+  },
+  settingsTitle: {
+    color: '#00ffff',
+    marginBottom: '15px',
+    fontSize: '18px',
+    textAlign: 'center',
+  },
+  saveButton: {
+    width: '100%',
+    padding: '12px',
+    marginTop: '10px',
+    fontSize: '14px',
+    backgroundColor: '#00ffff',
+    color: '#0a0a1a',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
   },
   card: {
     backgroundColor: '#1a1a2e',

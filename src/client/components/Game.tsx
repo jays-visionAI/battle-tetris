@@ -36,6 +36,7 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
   const [opponentAttackAnimation, setOpponentAttackAnimation] = useState(0);
   const gameRef = useRef<TetrisGame | null>(null);
   const animationRef = useRef<number>(0);
+  const gameInitializedRef = useRef(false);
 
   const getGame = useCallback(() => gameRef.current, []);
 
@@ -74,7 +75,7 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
     }
   }, [socket, playerId, getGame]);
 
-  // Socket 이벤트 리스너 설정 (Lobby에서 받은 socket 사용)
+  // Socket 이벤트 리스너 설정
   useEffect(() => {
     if (!socket) return;
 
@@ -115,22 +116,26 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
     };
 
     const onOpponentLeft = () => {
+      console.log('[Game] 상대방 퇴장');
       setWinner(playerId);
       setGameOver(true);
     };
 
     const onGameEnd = (data: { winnerId: string; loserId: string }) => {
+      console.log('[Game] 게임 종료:', data);
       setWinner(data.winnerId);
       setGameOver(true);
     };
 
     const onRematchRequested = () => {
+      console.log('[Game] 재경기 요청 수신');
       if (confirm('상대방이 재경기를 요청했습니다. 수락하시겠습니까?')) {
         socket.emit('rematch_accept');
       }
     };
 
     const onRematchStart = () => {
+      console.log('[Game] 재경기 시작');
       const g = getGame();
       if (g) {
         g.reset();
@@ -164,10 +169,12 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
     };
   }, [socket, playerId, getGame]);
 
-  // 게임 엔진 초기화
+  // 게임 엔진 초기화 (한 번만 실행)
   useEffect(() => {
-    if (!socket) return;
+    if (gameInitializedRef.current) return;
+    gameInitializedRef.current = true;
 
+    console.log('[Game] 게임 엔진 초기화');
     const newGame = new TetrisGame();
     gameRef.current = newGame;
     newGame.onEvent(handleGameEvent);
@@ -193,8 +200,9 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      gameInitializedRef.current = false;
     };
-  }, [socket, handleGameEvent, getGame]);
+  }, [handleGameEvent, getGame]);
 
   // 키보드 이벤트
   useEffect(() => {

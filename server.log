@@ -1,23 +1,5 @@
-node:events:491
-      throw er; // Unhandled 'error' event
-      ^
-
-Error: listen EADDRINUSE: address already in use :::3001
-    at __node_internal_captureLargerStackTrace (node:internal/errors:490:5)
-    at __node_internal_uvExceptionWithHostPort (node:internal/errors:589:12)
-    at Server.setupListenHandle [as _listen2] (node:net:1740:16)
-    at listenInCluster (node:net:1788:12)
-    at Server.listen (node:net:1876:7)
-    at <anonymous> (/Users/sangjaeseo/BlueforgeProjects/배틀테트리스/server/index.ts:232:12)
-    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)
-Emitted 'error' event on Server instance at:
-    at emitErrorNT (node:net:1767:8)
-    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
-  code: 'EADDRINUSE',
-  errno: -48,
-  syscall: 'listen',
-  address: '::',
-  port: 3001
-}
-
-Node.js v18.16.0
+🎮 Battle Tetris 서버 실행 중 (포트 3001)
+📦 클라이언트 파일 제공 경로: /Users/sangjaeseo/BlueforgeProjects/배틀테트리스/dist/client
+클라이언트 연결됨: CVISikmekNksPUkJAAAB
+클라이언트 연결됨: 7x0A7lWMkw3B_UfHAAAD
+클라이언트 연결됨: d55FH_QebjPgRkpEAAAF

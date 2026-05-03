@@ -2,7 +2,7 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-03T01:15:17.627Z",
+  "lastUpdatedAt": "2026-05-03T04:22:26.654Z",
   "decisions": [
     {
       "type": "general",
@@ -2058,71 +2058,71 @@
       "type": "general",
       "title": "User request: Render.com에서 배포된 주소 다시 생성해줘",
       "description": "Render.com에서 배포된 주소 다시 생성해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777763754846-uqmb",
       "createdAt": "2026-05-02T23:15:54.846Z",
-      "updatedAt": "2026-05-02T23:15:54.846Z"
+      "updatedAt": "2026-05-03T01:17:05.466Z"
     },
     {
       "type": "general",
       "title": "User request: 방 리스트 관련 작업 안했구만.. 빨리 수정해줘...",
       "description": "방 리스트 관련 작업 안했구만.. 빨리 수정해줘...",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777763900991-zty3",
       "createdAt": "2026-05-02T23:18:20.991Z",
-      "updatedAt": "2026-05-02T23:18:20.991Z"
+      "updatedAt": "2026-05-03T01:23:48.904Z"
     },
     {
       "type": "general",
       "title": "User request: 방목록을 보여주도록 하는 기능. 방에 입장한 유저리스트 보여주고 게임시작하는거. 기능 수정완료한거야?",
       "description": "방목록을 보여주도록 하는 기능. 방에 입장한 유저리스트 보여주고 게임시작하는거. 기능 수정완료한거야?",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777764692793-c18n",
       "createdAt": "2026-05-02T23:31:32.793Z",
-      "updatedAt": "2026-05-02T23:31:32.793Z"
+      "updatedAt": "2026-05-03T01:36:42.783Z"
     },
     {
       "type": "general",
       "title": "User request: 게임내에 보이는 중국어를 한글로 모두 교체",
       "description": "게임내에 보이는 중국어를 한글로 모두 교체",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777765386442-7z1c",
       "createdAt": "2026-05-02T23:43:06.442Z",
-      "updatedAt": "2026-05-02T23:43:06.442Z"
+      "updatedAt": "2026-05-03T02:08:58.611Z"
     },
     {
       "type": "general",
       "title": "User request: 알았으니까 이제 코딩해달라고",
       "description": "알았으니까 이제 코딩해달라고",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777765598035-gwrv",
       "createdAt": "2026-05-02T23:46:38.035Z",
-      "updatedAt": "2026-05-02T23:46:38.035Z"
+      "updatedAt": "2026-05-03T02:08:58.611Z"
     },
     {
       "type": "general",
       "title": "User request: 코딩해줘.. 계획은 충분히 알았으니까 다시 설명 안해도 돼",
       "description": "코딩해줘.. 계획은 충분히 알았으니까 다시 설명 안해도 돼",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777766000652-knp6",
       "createdAt": "2026-05-02T23:53:20.652Z",
-      "updatedAt": "2026-05-02T23:53:20.652Z"
+      "updatedAt": "2026-05-03T02:08:58.611Z"
     },
     {
       "type": "general",
       "title": "User request: 수정완료한거야?",
       "description": "수정완료한거야?",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777766492077-1y3y",
       "createdAt": "2026-05-03T00:01:32.077Z",
-      "updatedAt": "2026-05-03T00:01:32.077Z"
+      "updatedAt": "2026-05-03T02:08:58.611Z"
     },
     {
       "type": "general",
@@ -2138,7 +2138,7 @@
       "type": "feature",
       "title": "deepseek-v4-flash: 수정완료한거야?",
       "description": "네, 지금까지의 대화를 종합해보면 사용자는 여러 기능 수정을 요청했지만 실제 파일에 반영되지 않은 상태입니다. 지금 바로 모든 코드를 수정하겠습니다.\n\n먼저 현재 파일 상태를 다시 확인합니다.\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"server/index.ts\"}</parameter",
-      "status": "active",
+      "status": "completed",
       "source": "agent",
       "relatedFiles": [
         "server/index.ts",
@@ -2155,57 +2155,57 @@
       ],
       "id": "d-1777766731050-f6yd",
       "createdAt": "2026-05-03T00:05:31.050Z",
-      "updatedAt": "2026-05-03T00:05:31.050Z"
+      "updatedAt": "2026-05-03T02:08:58.611Z"
     },
     {
       "type": "general",
       "title": "User request: [BROWSER_ONLY_MODE] The user wants to test/preview the app in the browser. DO NO",
       "description": "[BROWSER_ONLY_MODE] The user wants to test/preview the app in the browser. DO NOT modify any source files. DO NOT use file_write. Follow this EXACT sequence:\n1. Read package.json to find the dev script name and port\n2. terminal_exec(\"npm run dev\") — start dev server if not running\n3. browser_wait(de",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777766958452-yihj",
       "createdAt": "2026-05-03T00:09:18.452Z",
-      "updatedAt": "2026-05-03T00:09:18.452Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: [BROWSER_ONLY_MODE] The user wants to test/preview the app in the browser. DO NO",
       "description": "[BROWSER_ONLY_MODE] The user wants to test/preview the app in the browser. DO NOT modify any source files. DO NOT use file_write. Follow this EXACT sequence:\n1. Read package.json to find the dev script name and port\n2. terminal_exec(\"npm run dev\") — start dev server if not running\n3. browser_wait(de",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777767201783-unwa",
       "createdAt": "2026-05-03T00:13:21.783Z",
-      "updatedAt": "2026-05-03T00:13:21.783Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: [BROWSER_ONLY_MODE] The user wants to test/preview the app in the browser. DO NO",
       "description": "[BROWSER_ONLY_MODE] The user wants to test/preview the app in the browser. DO NOT modify any source files. DO NOT use file_write. Follow this EXACT sequence:\n1. Read package.json to find the dev script name and port\n2. terminal_exec(\"npm run dev\") — start dev server if not running\n3. browser_wait(de",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777767418814-b317",
       "createdAt": "2026-05-03T00:16:58.814Z",
-      "updatedAt": "2026-05-03T00:16:58.814Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 배포해줘",
       "description": "배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777768112844-bf8i",
       "createdAt": "2026-05-03T00:28:32.844Z",
-      "updatedAt": "2026-05-03T00:28:32.844Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 그래서 배포했어? 내가 배포를 위해 사전점검 및 분석을 해달라고 했어? 아니면 배포해달라고 했어? 넌 뭐한거야?",
       "description": "그래서 배포했어? 내가 배포를 위해 사전점검 및 분석을 해달라고 했어? 아니면 배포해달라고 했어? 넌 뭐한거야?",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777768335769-kp8b",
       "createdAt": "2026-05-03T00:32:15.769Z",
-      "updatedAt": "2026-05-03T00:32:15.769Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
@@ -2225,11 +2225,11 @@
       "type": "general",
       "title": "User request: 배포 시작해줘.. 시작하라고 안해서 안한거야?",
       "description": "배포 시작해줘.. 시작하라고 안해서 안한거야?",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777768499215-55ym",
       "createdAt": "2026-05-03T00:34:59.215Z",
-      "updatedAt": "2026-05-03T00:34:59.215Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
@@ -2249,11 +2249,11 @@
       "type": "general",
       "title": "User request: 제발 배포해달라고!!!!! 같은 말을 몇번 반복하게 하는거야????",
       "description": "제발 배포해달라고!!!!! 같은 말을 몇번 반복하게 하는거야????",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777768735699-ddz9",
       "createdAt": "2026-05-03T00:38:55.699Z",
-      "updatedAt": "2026-05-03T00:38:55.699Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
@@ -2269,7 +2269,7 @@
       "type": "feature",
       "title": "deepseek-v4-flash: 계획은 충분히 세웟으니 배포해달라고",
       "description": "# 🚀 배틀테트리스 배포 구현 계획 (최종)\n\n## 0. 현재 상황 분석\n\n먼저 모든 파일을 읽어서 정확한 상태를 파악하겠습니다.\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"server/index.ts\"}</parameter>\n</invoke>\n\n<invoke name=\"file_re",
-      "status": "active",
+      "status": "completed",
       "source": "agent",
       "relatedFiles": [
         "package.json",
@@ -2282,37 +2282,37 @@
       ],
       "id": "d-1777768934508-tsm5",
       "createdAt": "2026-05-03T00:42:14.508Z",
-      "updatedAt": "2026-05-03T00:42:14.508Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 방생성 제대로 안됨",
       "description": "방생성 제대로 안됨",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777769069240-r7r8",
       "createdAt": "2026-05-03T00:44:29.240Z",
-      "updatedAt": "2026-05-03T00:44:29.240Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 방생성 오류 수정해줘",
       "description": "방생성 오류 수정해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777769339146-16uj",
       "createdAt": "2026-05-03T00:48:59.146Z",
-      "updatedAt": "2026-05-03T00:48:59.146Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 소스 수정하는거야? 왜 또 멈춰있는거야?",
       "description": "소스 수정하는거야? 왜 또 멈춰있는거야?",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777769655593-20pc",
       "createdAt": "2026-05-03T00:54:15.593Z",
-      "updatedAt": "2026-05-03T00:54:15.593Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
@@ -2332,21 +2332,21 @@
       "type": "general",
       "title": "User request: 그냥 배포해줘",
       "description": "그냥 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777769676184-ovtp",
       "createdAt": "2026-05-03T00:54:36.184Z",
-      "updatedAt": "2026-05-03T00:54:36.184Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 배포완료했어?",
       "description": "배포완료했어?",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777769840221-4yc0",
       "createdAt": "2026-05-03T00:57:20.221Z",
-      "updatedAt": "2026-05-03T00:57:20.221Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
@@ -2366,61 +2366,61 @@
       "type": "general",
       "title": "User request: 배포헤달라고~~~~",
       "description": "배포헤달라고~~~~",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777769986137-bxha",
       "createdAt": "2026-05-03T00:59:46.137Z",
-      "updatedAt": "2026-05-03T00:59:46.137Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: lockdown-install.js:1 SES Removing unpermitted intrinsics\nindex-DZvNxFrC.js:57 서",
       "description": "lockdown-install.js:1 SES Removing unpermitted intrinsics\nindex-DZvNxFrC.js:57 서버에 연결됨\nindex-DZvNxFrC.js:49 Uncaught TypeError: i.getState is not a function\n    at tg (index-DZvNxFrC.js:49:88646)\n    at xs (index-DZvNxFrC.js:48:47846)\n    at zc (index-DZvNxFrC.js:48:70493)\n    at Lh (index-DZvNxFrC.",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777770051891-5eh5",
       "createdAt": "2026-05-03T01:00:51.891Z",
-      "updatedAt": "2026-05-03T01:00:51.891Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 방생성에 계속 에러 발생..\n\nlockdown-install.js:1 SES Removing unpermitted intrinsics\nindex",
       "description": "방생성에 계속 에러 발생..\n\nlockdown-install.js:1 SES Removing unpermitted intrinsics\nindex-DZvNxFrC.js:57 서버에 연결됨\nindex-DZvNxFrC.js:49 Uncaught TypeError: i.getState is not a function\n    at tg (index-DZvNxFrC.js:49:88646)\n    at xs (index-DZvNxFrC.js:48:47846)\n    at zc (index-DZvNxFrC.js:48:70493)\n    at Lh",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777770154408-znwt",
       "createdAt": "2026-05-03T01:02:34.408Z",
-      "updatedAt": "2026-05-03T01:02:34.408Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 이건 에러에 대한 콘솔 에러를 확인하라고 콘솔로그를 입력한거야..\n-------------\n\nlockdown-install.js:1 SES Re",
       "description": "이건 에러에 대한 콘솔 에러를 확인하라고 콘솔로그를 입력한거야..\n-------------\n\nlockdown-install.js:1 SES Removing unpermitted intrinsics\nindex-DZvNxFrC.js:57 서버에 연결됨\nindex-DZvNxFrC.js:49 Uncaught TypeError: i.getState is not a function\n    at tg (index-DZvNxFrC.js:49:88646)\n    at xs (index-DZvNxFrC.js:48:47846)\n    at zc (in",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777770241792-dd25",
       "createdAt": "2026-05-03T01:04:01.792Z",
-      "updatedAt": "2026-05-03T01:04:01.792Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 바로 수정해줘",
       "description": "바로 수정해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777770494509-25p5",
       "createdAt": "2026-05-03T01:08:14.509Z",
-      "updatedAt": "2026-05-03T01:08:14.509Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 방생성 오류 수정한거야???",
       "description": "방생성 오류 수정한거야???",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777770748291-nh9t",
       "createdAt": "2026-05-03T01:12:28.291Z",
-      "updatedAt": "2026-05-03T01:12:28.291Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
@@ -2440,149 +2440,274 @@
       "type": "general",
       "title": "User request: 재배포해줘",
       "description": "재배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777770775997-oori",
       "createdAt": "2026-05-03T01:12:55.997Z",
-      "updatedAt": "2026-05-03T01:12:55.997Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
     },
     {
       "type": "general",
       "title": "User request: 재배포해줘",
       "description": "재배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777770807304-wc9t",
       "createdAt": "2026-05-03T01:13:27.304Z",
-      "updatedAt": "2026-05-03T01:13:27.304Z"
+      "updatedAt": "2026-05-03T03:54:30.131Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 버그를 수정해줘",
+      "description": "버그를 수정해줘",
+      "status": "completed",
+      "source": "user",
+      "id": "d-1777771025243-a141",
+      "createdAt": "2026-05-03T01:17:05.243Z",
+      "updatedAt": "2026-05-03T03:54:30.131Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 다른 말 하지말고 그냥 바로 수정해",
+      "description": "다른 말 하지말고 그냥 바로 수정해",
+      "status": "completed",
+      "source": "user",
+      "id": "d-1777771428433-y6pw",
+      "createdAt": "2026-05-03T01:23:48.433Z",
+      "updatedAt": "2026-05-03T03:54:30.131Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 계획대로 수정바로 진행해줘",
+      "description": "이전 계획대로 수정바로 진행해줘",
+      "status": "completed",
+      "source": "user",
+      "id": "d-1777772202332-1xml",
+      "createdAt": "2026-05-03T01:36:42.332Z",
+      "updatedAt": "2026-05-03T03:54:30.131Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 제발 이제 소스 좁 고쳐줘.. 제발 고쳐달라고 걔획 그만세우고",
+      "description": "제발 이제 소스 좁 고쳐줘.. 제발 고쳐달라고 걔획 그만세우고",
+      "status": "completed",
+      "source": "user",
+      "id": "d-1777774138221-motw",
+      "createdAt": "2026-05-03T02:08:58.221Z",
+      "updatedAt": "2026-05-03T04:09:26.813Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777776605278-tpnx",
+      "createdAt": "2026-05-03T02:50:05.278Z",
+      "updatedAt": "2026-05-03T02:50:05.278Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777776741149-x4pf",
+      "createdAt": "2026-05-03T02:52:21.149Z",
+      "updatedAt": "2026-05-03T02:52:21.149Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777777320426-i4t5",
+      "createdAt": "2026-05-03T03:02:00.426Z",
+      "updatedAt": "2026-05-03T03:02:00.426Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777777456237-sx9i",
+      "createdAt": "2026-05-03T03:04:16.237Z",
+      "updatedAt": "2026-05-03T03:04:16.237Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777778393164-8l97",
+      "createdAt": "2026-05-03T03:19:53.164Z",
+      "updatedAt": "2026-05-03T03:19:53.164Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777778528954-fx0t",
+      "createdAt": "2026-05-03T03:22:08.954Z",
+      "updatedAt": "2026-05-03T03:22:08.954Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777779087784-68gi",
+      "createdAt": "2026-05-03T03:31:27.784Z",
+      "updatedAt": "2026-05-03T03:31:27.784Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777779223511-420j",
+      "createdAt": "2026-05-03T03:33:43.511Z",
+      "updatedAt": "2026-05-03T03:33:43.511Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777779535437-tirf",
+      "createdAt": "2026-05-03T03:38:55.437Z",
+      "updatedAt": "2026-05-03T03:38:55.437Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777779670948-v43m",
+      "createdAt": "2026-05-03T03:41:10.948Z",
+      "updatedAt": "2026-05-03T03:41:10.948Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777780002799-26ka",
+      "createdAt": "2026-05-03T03:46:42.799Z",
+      "updatedAt": "2026-05-03T03:46:42.799Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 지난 세션에서 중단된 내용을 파악해서 보고해줘",
+      "description": "지난 세션에서 중단된 내용을 파악해서 보고해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777780217402-xuuo",
+      "createdAt": "2026-05-03T03:50:17.402Z",
+      "updatedAt": "2026-05-03T03:50:17.402Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 지난 세션에서 중단된 내용을 파악해서 보고해줘",
+      "description": "지난 세션에서 중단된 내용을 파악해서 보고해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777780353117-p34p",
+      "createdAt": "2026-05-03T03:52:33.117Z",
+      "updatedAt": "2026-05-03T03:52:33.117Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777780469509-9st6",
+      "createdAt": "2026-05-03T03:54:29.509Z",
+      "updatedAt": "2026-05-03T03:54:29.509Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 룸 생성이 안되고, 룸리스트가 안만들어져.",
+      "description": "룸 생성이 안되고, 룸리스트가 안만들어져.",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777780711697-juhf",
+      "createdAt": "2026-05-03T03:58:31.697Z",
+      "updatedAt": "2026-05-03T03:58:31.697Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 룸 생성이 안되고, 룸리스트가 안만들어져.",
+      "description": "룸 생성이 안되고, 룸리스트가 안만들어져.",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777780925191-8od7",
+      "createdAt": "2026-05-03T04:02:05.191Z",
+      "updatedAt": "2026-05-03T04:02:05.191Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: ",
+      "description": "",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777781184250-kl7t",
+      "createdAt": "2026-05-03T04:06:24.250Z",
+      "updatedAt": "2026-05-03T04:06:24.250Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: Render.com 배포 - GitHub 푸시 후 Render.com에서 서비스 시작",
+      "description": "Render.com 배포 - GitHub 푸시 후 Render.com에서 서비스 시작",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777781366289-glqh",
+      "createdAt": "2026-05-03T04:09:26.289Z",
+      "updatedAt": "2026-05-03T04:09:26.289Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: Render.com 배포 - GitHub 푸시 후 Render.com에서 서비스 시작",
+      "description": "Render.com 배포 - GitHub 푸시 후 Render.com에서 서비스 시작",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777781657932-ye5c",
+      "createdAt": "2026-05-03T04:14:17.932Z",
+      "updatedAt": "2026-05-03T04:14:17.932Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: Render.com 배포 - GitHub 푸시 후 Render.com에서 서비스 시작",
+      "description": "Render.com 배포 - GitHub 푸시 후 Render.com에서 서비스 시작",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777781930028-3leo",
+      "createdAt": "2026-05-03T04:18:50.028Z",
+      "updatedAt": "2026-05-03T04:18:50.028Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: Render.com 배포 - GitHub 푸시 후 Render.com에서 서비스 시작",
+      "description": "Render.com 배포 - GitHub 푸시 후 Render.com에서 서비스 시작",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777782143243-ffel",
+      "createdAt": "2026-05-03T04:22:23.243Z",
+      "updatedAt": "2026-05-03T04:22:23.243Z"
     }
   ],
   "stageHistory": [
-    {
-      "workflowId": "f061ca3d-c11b-4d82-8177-2fa6c7d91fb3",
-      "roleId": "reviewer",
-      "summary": "Stage reviewer timed out after 120s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:48:53.446Z",
-      "toolsSummary": "",
-      "id": "s-1777589335042-1vbp"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "coder",
-      "summary": "Stage coder timed out after 300s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:36:17.468Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-c4rs"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "planner",
-      "summary": "Stage planner timed out after 120s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:36:22.404Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-1pbd"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "reviewer",
-      "summary": "Stage reviewer timed out after 120s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:36:22.449Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-b7lj"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "planner",
-      "summary": "Stage planner timed out after 120s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:36:24.646Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-3i8t"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "tester",
-      "summary": "Stage tester timed out after 300s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:36:47.163Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-e0ex"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "coder",
-      "summary": "Stage coder timed out after 300s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:36:53.099Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-9l7t"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "planner",
-      "summary": "Stage planner timed out after 120s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:37:07.039Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-h9az"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "reviewer",
-      "summary": "Stage reviewer timed out after 120s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:38:47.172Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-mpbl"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "coder",
-      "summary": "",
-      "filesWritten": [
-        "src/client/App.tsx",
-        "src/client/index.css",
-        ".env.example"
-      ],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:39:31.733Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-3skc"
-    },
-    {
-      "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
-      "roleId": "tester",
-      "summary": "Stage tester timed out after 300s",
-      "filesWritten": [],
-      "modelUsed": "gemini-2.5-pro",
-      "success": false,
-      "timestamp": "2026-04-30T22:40:56.847Z",
-      "toolsSummary": "",
-      "id": "s-1777589494477-p0iw"
-    },
     {
       "workflowId": "32f02959-8110-45f5-b5d9-cc3d6ceea99d",
       "roleId": "coder",
@@ -4856,6 +4981,143 @@
       "timestamp": "2026-05-03T01:15:15.822Z",
       "toolsSummary": "",
       "id": "s-1777770916648-ir01"
+    },
+    {
+      "workflowId": "db8b9c0b-7d9f-4e40-bdb2-e683428ebd25",
+      "roleId": "coder",
+      "summary": "Stage coder timed out after 300s",
+      "filesWritten": [],
+      "modelUsed": "deepseek-v4-flash",
+      "success": false,
+      "timestamp": "2026-05-03T01:18:20.974Z",
+      "toolsSummary": "",
+      "id": "s-1777771101813-ttwx"
+    },
+    {
+      "workflowId": "c0f730b3-d2bb-41c4-a4d6-9d34ceeea33a",
+      "roleId": "coder",
+      "summary": "Stage coder timed out after 300s",
+      "filesWritten": [],
+      "modelUsed": "deepseek-v4-flash",
+      "success": false,
+      "timestamp": "2026-05-03T01:18:20.974Z",
+      "toolsSummary": "",
+      "id": "s-1777771207737-cyjg"
+    },
+    {
+      "workflowId": "c0f730b3-d2bb-41c4-a4d6-9d34ceeea33a",
+      "roleId": "coder",
+      "summary": "",
+      "filesWritten": [
+        "src/client/components/Game.tsx",
+        "src/client/App.tsx",
+        "src/client/components/Lobby.tsx",
+        "server/index.ts",
+        "vite.config.ts",
+        "package.json",
+        "src/client/components/Board.tsx"
+      ],
+      "modelUsed": "kimi-k2.6-vision",
+      "success": false,
+      "timestamp": "2026-05-03T01:20:07.056Z",
+      "toolsSummary": "",
+      "id": "s-1777771207737-knb2"
+    },
+    {
+      "workflowId": "7ad43fd6-25ca-4a6d-ab69-e02d05b0fe9f",
+      "roleId": "coder",
+      "summary": "Stage coder timed out after 300s",
+      "filesWritten": [],
+      "modelUsed": "deepseek-v4-flash",
+      "success": false,
+      "timestamp": "2026-05-03T01:18:20.974Z",
+      "toolsSummary": "",
+      "id": "s-1777771229301-ozom"
+    },
+    {
+      "workflowId": "7ad43fd6-25ca-4a6d-ab69-e02d05b0fe9f",
+      "roleId": "coder",
+      "summary": "",
+      "filesWritten": [
+        "src/client/components/Game.tsx",
+        "src/client/App.tsx",
+        "src/client/components/Lobby.tsx",
+        "server/index.ts",
+        "vite.config.ts",
+        "package.json",
+        "src/client/components/Board.tsx"
+      ],
+      "modelUsed": "kimi-k2.6-vision",
+      "success": false,
+      "timestamp": "2026-05-03T01:20:07.056Z",
+      "toolsSummary": "",
+      "id": "s-1777771229301-sbbo"
+    },
+    {
+      "workflowId": "7ad43fd6-25ca-4a6d-ab69-e02d05b0fe9f",
+      "roleId": "coder",
+      "summary": "Stage coder timed out after 300s",
+      "filesWritten": [],
+      "modelUsed": "deepseek-v4-flash",
+      "success": false,
+      "timestamp": "2026-05-03T01:20:28.609Z",
+      "toolsSummary": "",
+      "id": "s-1777771229301-vtoh"
+    },
+    {
+      "workflowId": "e31b4263-af2d-4f6d-a08f-4a88e723303e",
+      "roleId": "planner",
+      "summary": "Stage planner timed out after 120s",
+      "filesWritten": [],
+      "modelUsed": "deepseek-v4-flash",
+      "success": false,
+      "timestamp": "2026-05-03T01:25:49.372Z",
+      "toolsSummary": "",
+      "id": "s-1777771851884-er0b"
+    },
+    {
+      "workflowId": "e31b4263-af2d-4f6d-a08f-4a88e723303e",
+      "roleId": "coder",
+      "summary": "Stage coder timed out after 300s",
+      "filesWritten": [],
+      "modelUsed": "deepseek-v4-flash",
+      "success": false,
+      "timestamp": "2026-05-03T01:30:51.033Z",
+      "toolsSummary": "",
+      "id": "s-1777771851884-lw5o"
+    },
+    {
+      "workflowId": "3af97967-6d26-4055-8252-58ac53ba9e24",
+      "roleId": "planner",
+      "summary": "Stage planner timed out after 120s",
+      "filesWritten": [],
+      "modelUsed": "deepseek-v4-flash",
+      "success": false,
+      "timestamp": "2026-05-03T01:38:43.263Z",
+      "toolsSummary": "",
+      "id": "s-1777772625189-jrqs"
+    },
+    {
+      "workflowId": "3af97967-6d26-4055-8252-58ac53ba9e24",
+      "roleId": "coder",
+      "summary": "Stage coder timed out after 300s",
+      "filesWritten": [],
+      "modelUsed": "deepseek-v4-flash",
+      "success": false,
+      "timestamp": "2026-05-03T01:43:44.284Z",
+      "toolsSummary": "",
+      "id": "s-1777772625189-1268"
+    },
+    {
+      "workflowId": "8a69da79-5473-42c1-8d48-1c91191c5edd",
+      "roleId": "coder",
+      "summary": "Stage coder timed out after 300s",
+      "filesWritten": [],
+      "modelUsed": "deepseek-v4-flash",
+      "success": false,
+      "timestamp": "2026-05-03T02:13:58.849Z",
+      "toolsSummary": "",
+      "id": "s-1777774439887-nmy7"
     }
   ],
   "sessions": []

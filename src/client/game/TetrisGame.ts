@@ -20,11 +20,6 @@ export interface GameState {
   paused: boolean;
 }
 
-export interface AttackResult {
-  linesAdded: number;
-  attackerScore: number;
-}
-
 export type GameEventType = 'line_clear' | 'attack_sent' | 'attack_received' | 'game_over';
 
 export interface GameEvent {
@@ -73,7 +68,7 @@ export class TetrisGame {
     const shape = TETROMINOES[type][0];
     return {
       type,
-      shape,
+      shape: shape.map(row => [...row]),
       position: { x: Math.floor((BOARD_WIDTH - shape[0].length) / 2), y: 0 },
       color: getColor(type),
     };
@@ -81,13 +76,13 @@ export class TetrisGame {
 
   private spawnPiece(): boolean {
     this.refillBag();
-    
+
     if (this.nextPiece) {
       this.currentPiece = this.nextPiece;
     } else {
       this.currentPiece = this.createTetromino(this.getNextPieceType());
     }
-    
+
     this.nextPiece = this.createTetromino(this.getNextPieceType());
 
     if (this.checkCollision(this.currentPiece.shape, this.currentPiece.position)) {
@@ -151,28 +146,23 @@ export class TetrisGame {
     }
 
     if (clearedRows.length > 0) {
-      // Remove cleared rows
       for (const row of clearedRows) {
         this.board.splice(row, 1);
         this.board.unshift(Array(BOARD_WIDTH).fill(null));
       }
 
-      // Update score based on lines cleared
       const lineScores = [0, 100, 300, 500, 800];
       this.score += lineScores[clearedRows.length] * this.level;
       this.lines += clearedRows.length;
 
-      // Level up every 10 lines
       this.level = Math.floor(this.lines / 10) + 1;
       this.dropInterval = Math.max(100, 1000 - (this.level - 1) * 100);
 
-      // Emit line clear event
       this.emitEvent({
         type: 'line_clear',
         data: { lines: clearedRows.length, rows: clearedRows, score: this.score },
       });
 
-      // Send attack to opponent
       if (clearedRows.length > 0) {
         this.emitEvent({
           type: 'attack_sent',
@@ -188,7 +178,7 @@ export class TetrisGame {
     if (!this.currentPiece || this.gameOver || this.paused) return false;
 
     const newPos = { ...this.currentPiece.position, x: this.currentPiece.position.x - 1 };
-    
+
     if (!this.checkCollision(this.currentPiece.shape, newPos)) {
       this.currentPiece.position = newPos;
       return true;
@@ -200,7 +190,7 @@ export class TetrisGame {
     if (!this.currentPiece || this.gameOver || this.paused) return false;
 
     const newPos = { ...this.currentPiece.position, x: this.currentPiece.position.x + 1 };
-    
+
     if (!this.checkCollision(this.currentPiece.shape, newPos)) {
       this.currentPiece.position = newPos;
       return true;
@@ -212,12 +202,12 @@ export class TetrisGame {
     if (!this.currentPiece || this.gameOver || this.paused) return false;
 
     const newPos = { ...this.currentPiece.position, y: this.currentPiece.position.y + 1 };
-    
+
     if (!this.checkCollision(this.currentPiece.shape, newPos)) {
       this.currentPiece.position = newPos;
       return true;
     }
-    
+
     this.lockPiece();
     return false;
   }
@@ -226,17 +216,17 @@ export class TetrisGame {
     if (!this.currentPiece || this.gameOver || this.paused) return false;
 
     const type = this.currentPiece.type;
-    const currentRotation = TETROMINOES[type].indexOf(this.currentPiece.shape);
+    const currentRotation = TETROMINOES[type].findIndex(
+      s => JSON.stringify(s) === JSON.stringify(this.currentPiece!.shape)
+    );
     const nextRotation = (currentRotation + 1) % 4;
-    const newShape = TETROMINOES[type][nextRotation];
+    const newShape = TETROMINOES[type][nextRotation].map(row => [...row]);
 
-    // Try normal rotation
     if (!this.checkCollision(newShape, this.currentPiece.position)) {
       this.currentPiece.shape = newShape;
       return true;
     }
 
-    // Wall kick - try moving left
     const leftKick = { ...this.currentPiece.position, x: this.currentPiece.position.x - 1 };
     if (!this.checkCollision(newShape, leftKick)) {
       this.currentPiece.position = leftKick;
@@ -244,7 +234,6 @@ export class TetrisGame {
       return true;
     }
 
-    // Wall kick - try moving right
     const rightKick = { ...this.currentPiece.position, x: this.currentPiece.position.x + 1 };
     if (!this.checkCollision(newShape, rightKick)) {
       this.currentPiece.position = rightKick;
@@ -252,7 +241,6 @@ export class TetrisGame {
       return true;
     }
 
-    // Wall kick - try moving up (for I piece)
     const upKick = { ...this.currentPiece.position, y: this.currentPiece.position.y - 1 };
     if (!this.checkCollision(newShape, upKick)) {
       this.currentPiece.position = upKick;
@@ -275,15 +263,11 @@ export class TetrisGame {
   addAttackLines(count: number): void {
     if (count <= 0) return;
 
-    // Remove top rows and add attack lines at bottom
     for (let i = 0; i < count; i++) {
-      // Shift all rows up by 1
       this.board.shift();
-      
-      // Add new line at bottom with random gaps
+
       const newLine: (string | null)[] = [];
       for (let x = 0; x < BOARD_WIDTH; x++) {
-        // Leave 1-2 random gaps to make it more playable
         newLine.push(Math.random() > 0.2 ? '#FF4444' : null);
       }
       this.board.push(newLine);
@@ -291,7 +275,6 @@ export class TetrisGame {
 
     this.emitEvent({ type: 'attack_received', data: { lines: count } });
 
-    // Check if game over after attack
     if (this.currentPiece && this.checkCollision(this.currentPiece.shape, this.currentPiece.position)) {
       this.gameOver = true;
       this.emitEvent({ type: 'game_over', data: { winner: false } });
