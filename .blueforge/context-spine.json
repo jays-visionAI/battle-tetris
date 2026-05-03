@@ -2,7 +2,7 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-03T04:56:59.167Z",
+  "lastUpdatedAt": "2026-05-03T04:58:39.181Z",
   "decisions": [
     {
       "type": "general",
@@ -2796,11 +2796,43 @@
       "type": "general",
       "title": "User request: 수정되었으면 다시 배포해줘",
       "description": "수정되었으면 다시 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777784210625-3bhp",
       "createdAt": "2026-05-03T04:56:50.625Z",
-      "updatedAt": "2026-05-03T04:56:50.625Z"
+      "updatedAt": "2026-05-03T04:57:20.605Z"
+    },
+    {
+      "type": "feature",
+      "title": "deepseek-v4-flash: 수정되었으면 다시 배포해줘",
+      "description": "I'll now read the current source files and implement the fixes, then deploy. Let me start by reading all the key files.\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"server/index.ts\"",
+      "status": "active",
+      "source": "agent",
+      "relatedFiles": [
+        "server/index.ts",
+        "src/client/App.tsx",
+        "src/client/components/Lobby.tsx",
+        "src/client/components/Game.tsx",
+        "render.yaml",
+        "package.json"
+      ],
+      "tags": [
+        "deepseek-v4-flash",
+        "code_implementation"
+      ],
+      "id": "d-1777784240382-qf46",
+      "createdAt": "2026-05-03T04:57:20.382Z",
+      "updatedAt": "2026-05-03T04:57:20.382Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 개암 주소 알려줘",
+      "description": "개암 주소 알려줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777784316256-18el",
+      "createdAt": "2026-05-03T04:58:36.256Z",
+      "updatedAt": "2026-05-03T04:58:36.256Z"
     }
   ],
   "stageHistory": [
