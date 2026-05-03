@@ -23,7 +23,7 @@ interface OpponentState {
 }
 
 export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
-  const [game, setGame] = useState<TetrisGame | null>(null);
+  const [renderTick, setRenderTick] = useState(0);
   const [opponentState, setOpponentState] = useState<OpponentState>({
     board: Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(null)),
     score: 0,
@@ -36,15 +36,17 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
   const [opponentAttackAnimation, setOpponentAttackAnimation] = useState(0);
   const gameRef = useRef<TetrisGame | null>(null);
   const animationRef = useRef<number>(0);
-  const [, forceUpdate] = useState(0);
+
+  const getGame = useCallback(() => gameRef.current, []);
 
   const handleGameEvent = useCallback((event: { type: string; data: unknown }) => {
     if (event.type === 'line_clear') {
       const data = event.data as { lines: number; score: number };
       socket?.emit('attack', { lines: data.lines, fromPlayerId: playerId });
       
-      if (gameRef.current) {
-        const state = gameRef.current.getState();
+      const g = getGame();
+      if (g) {
+        const state = g.getState();
         socket?.emit('board_update', {
           board: state.board,
           score: state.score,
@@ -59,8 +61,9 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
       setAttackAnimation(data.lines);
       setTimeout(() => setAttackAnimation(0), 500);
       
-      if (gameRef.current) {
-        const state = gameRef.current.getState();
+      const g = getGame();
+      if (g) {
+        const state = g.getState();
         socket?.emit('board_update', {
           board: state.board,
           score: state.score,
@@ -69,7 +72,7 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
         });
       }
     }
-  }, [socket, playerId]);
+  }, [socket, playerId, getGame]);
 
   // Socket 이벤트 리스너 설정 (Lobby에서 받은 socket 사용)
   useEffect(() => {
@@ -77,10 +80,11 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
 
     const onAttacked = (data: { lines: number }) => {
       console.log('[Game] attacked 이벤트 수신:', data);
-      if (gameRef.current) {
-        gameRef.current.addAttackLines(data.lines);
-        const state = gameRef.current.getState();
-        forceUpdate(n => n + 1);
+      const g = getGame();
+      if (g) {
+        g.addAttackLines(data.lines);
+        const state = g.getState();
+        setRenderTick(t => t + 1);
         socket.emit('board_update', {
           board: state.board,
           score: state.score,
@@ -127,9 +131,10 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
     };
 
     const onRematchStart = () => {
-      if (gameRef.current) {
-        gameRef.current.reset();
-        forceUpdate(n => n + 1);
+      const g = getGame();
+      if (g) {
+        g.reset();
+        setRenderTick(t => t + 1);
         setGameOver(false);
         setWinner(null);
         setOpponentState({
@@ -157,7 +162,7 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
       socket.off('rematch_requested', onRematchRequested);
       socket.off('rematch_start', onRematchStart);
     };
-  }, [socket, playerId]);
+  }, [socket, playerId, getGame]);
 
   // 게임 엔진 초기화
   useEffect(() => {
@@ -167,16 +172,16 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
     gameRef.current = newGame;
     newGame.onEvent(handleGameEvent);
     newGame.init();
-    setGame(newGame);
+    setRenderTick(t => t + 1);
 
     let lastTime = 0;
     const gameLoop = (timestamp: number) => {
       if (lastTime === 0) lastTime = timestamp;
       
-      if (gameRef.current && !gameRef.current.isGameOver() && !gameRef.current.isPaused()) {
-        gameRef.current.update(timestamp);
-        // forceUpdate로 리렌더링 트리거 (TetrisGame 인스턴스 유지)
-        forceUpdate(n => n + 1);
+      const g = getGame();
+      if (g && !g.isGameOver() && !g.isPaused()) {
+        g.update(timestamp);
+        setRenderTick(t => t + 1);
       }
       
       animationRef.current = requestAnimationFrame(gameLoop);
@@ -189,12 +194,12 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [socket, handleGameEvent]);
+  }, [socket, handleGameEvent, getGame]);
 
   // 키보드 이벤트
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const g = gameRef.current;
+      const g = getGame();
       if (!g || g.isGameOver()) return;
 
       switch (e.key) {
@@ -220,12 +225,12 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
           break;
       }
       
-      forceUpdate(n => n + 1);
+      setRenderTick(t => t + 1);
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [getGame]);
 
   const handleRematch = () => {
     socket?.emit('rematch_request');
@@ -239,7 +244,8 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
     }
   };
 
-  if (!game) {
+  const g = getGame();
+  if (!g) {
     return (
       <div style={styles.loading}>
         <div style={styles.spinner} />
@@ -248,7 +254,7 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
     );
   }
 
-  const state = game.getState();
+  const state = g.getState();
 
   return (
     <div style={styles.container}>

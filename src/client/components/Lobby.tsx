@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 import Game from './Game';
 
 interface Player {
@@ -12,6 +12,10 @@ interface RoomInfo {
   playerCount: number;
   maxPlayers: number;
   hasStarted: boolean;
+}
+
+interface LobbyProps {
+  socket: Socket | null;
 }
 
 function RoomListIcon() {
@@ -63,7 +67,7 @@ function SkullIcon() {
   );
 }
 
-export default function Lobby() {
+export default function Lobby({ socket }: LobbyProps) {
   const [playerName, setPlayerName] = useState('');
   const [roomId, setRoomId] = useState('');
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
@@ -72,66 +76,80 @@ export default function Lobby() {
   const [error, setError] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [roomList, setRoomList] = useState<RoomInfo[]>([]);
   const [showRoomList, setShowRoomList] = useState(true);
 
   useEffect(() => {
-    const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || '';
-    const newSocket = io(SOCKET_URL, {
-      transports: ['websocket', 'polling'],
-      timeout: 5000,
-    });
+    if (!socket) return;
 
-    newSocket.on('connect', () => {
+    const onConnect = () => {
       console.log('서버에 연결됨');
       setConnected(true);
       setError(null);
-    });
+    };
 
-    newSocket.on('connect_error', () => {
-      console.log('서버 연결 실패 - 데모 모드로 실행');
+    const onConnectError = () => {
+      console.log('서버 연결 실패');
       setConnected(false);
-    });
+    };
 
-    newSocket.on('disconnect', () => {
+    const onDisconnect = () => {
       console.log('서버 연결 해제');
       setConnected(false);
-    });
+    };
 
-    newSocket.on('rooms_list', (rooms: RoomInfo[]) => {
+    const onRoomsList = (rooms: RoomInfo[]) => {
       setRoomList(rooms);
-    });
+    };
 
-    newSocket.on('joined', (data: { roomId: string; playerId: string; players: Player[] }) => {
+    const onJoined = (data: { roomId: string; playerId: string; players: Player[] }) => {
       setCurrentRoomId(data.roomId);
       setPlayerId(data.playerId);
       setPlayers(data.players);
       setShowRoomList(false);
-    });
+    };
 
-    newSocket.on('waiting', () => {
+    const onWaiting = () => {
       setIsWaiting(true);
-    });
+    };
 
-    newSocket.on('player_joined', (data: { playerId: string; playerName: string }) => {
+    const onPlayerJoined = (data: { playerId: string; playerName: string }) => {
       setPlayers(prev => [...prev, { id: data.playerId, name: data.playerName }]);
-    });
+    };
 
-    newSocket.on('game_start', (data: { players: Player[] }) => {
+    const onGameStart = (data: { players: Player[] }) => {
       setPlayers(data.players);
       setIsWaiting(false);
-    });
+    };
 
-    setSocket(newSocket);
+    socket.on('connect', onConnect);
+    socket.on('connect_error', onConnectError);
+    socket.on('disconnect', onDisconnect);
+    socket.on('rooms_list', onRoomsList);
+    socket.on('joined', onJoined);
+    socket.on('waiting', onWaiting);
+    socket.on('player_joined', onPlayerJoined);
+    socket.on('game_start', onGameStart);
+
+    // 이미 연결되어 있으면 상태 업데이트
+    if (socket.connected) {
+      setConnected(true);
+    }
 
     return () => {
-      newSocket.disconnect();
+      socket.off('connect', onConnect);
+      socket.off('connect_error', onConnectError);
+      socket.off('disconnect', onDisconnect);
+      socket.off('rooms_list', onRoomsList);
+      socket.off('joined', onJoined);
+      socket.off('waiting', onWaiting);
+      socket.off('player_joined', onPlayerJoined);
+      socket.off('game_start', onGameStart);
     };
-  }, []);
+  }, [socket]);
 
   const handleCreateRoom = () => {
-    if (!socket) {
+    if (!socket || !connected) {
       setError('서버에 연결되지 않았습니다. 데모 모드로 진행합니다.');
       startDemoGame();
       return;
