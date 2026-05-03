@@ -13,6 +13,7 @@ interface GameProps {
   playerId: string;
   roomId: string;
   socket: Socket | null;
+  players?: Player[];
   onLeaveRoom?: () => void;
 }
 
@@ -22,7 +23,7 @@ interface OpponentState {
   lines: number;
 }
 
-export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
+export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GameProps) {
   const [renderTick, setRenderTick] = useState(0);
   const [opponentState, setOpponentState] = useState<OpponentState>({
     board: Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(null)),
@@ -38,42 +39,55 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
   const animationRef = useRef<number>(0);
   const gameInitializedRef = useRef(false);
 
+  useEffect(() => {
+    if (players && players.length > 0) {
+      const opponent = players.find(p => p.id !== playerId);
+      if (opponent) {
+        setOpponentName(opponent.name);
+      }
+    }
+  }, [players, playerId]);
+
   const getGame = useCallback(() => gameRef.current, []);
+
+  const lastBoardUpdateRef = useRef(0);
+
+  const sendBoardUpdate = useCallback(() => {
+    if (!socket) return;
+    const now = Date.now();
+    if (now - lastBoardUpdateRef.current < 50) return;
+    lastBoardUpdateRef.current = now;
+
+    const g = getGame();
+    if (g) {
+      const state = g.getState();
+      socket.emit('board_update', {
+        board: state.board,
+        score: state.score,
+        lines: state.lines,
+        fromPlayerId: playerId,
+      });
+    }
+  }, [socket, playerId, getGame]);
 
   const handleGameEvent = useCallback((event: { type: string; data: unknown }) => {
     if (event.type === 'line_clear') {
       const data = event.data as { lines: number; score: number };
       socket?.emit('attack', { lines: data.lines, fromPlayerId: playerId });
-      
-      const g = getGame();
-      if (g) {
-        const state = g.getState();
-        socket?.emit('board_update', {
-          board: state.board,
-          score: state.score,
-          lines: state.lines,
-          fromPlayerId: playerId,
-        });
-      }
+      sendBoardUpdate();
     }
-    
+
     if (event.type === 'attack_received') {
       const data = event.data as { lines: number };
       setAttackAnimation(data.lines);
       setTimeout(() => setAttackAnimation(0), 500);
-      
-      const g = getGame();
-      if (g) {
-        const state = g.getState();
-        socket?.emit('board_update', {
-          board: state.board,
-          score: state.score,
-          lines: state.lines,
-          fromPlayerId: playerId,
-        });
-      }
+      sendBoardUpdate();
     }
-  }, [socket, playerId, getGame]);
+
+    if (event.type === 'board_changed') {
+      sendBoardUpdate();
+    }
+  }, [socket, playerId, sendBoardUpdate]);
 
   // Socket 이벤트 리스너 설정
   useEffect(() => {
@@ -84,14 +98,8 @@ export function Game({ playerId, roomId, socket, onLeaveRoom }: GameProps) {
       const g = getGame();
       if (g) {
         g.addAttackLines(data.lines);
-        const state = g.getState();
         setRenderTick(t => t + 1);
-        socket.emit('board_update', {
-          board: state.board,
-          score: state.score,
-          lines: state.lines,
-          fromPlayerId: playerId,
-        });
+        sendBoardUpdate();
       }
       setOpponentAttackAnimation(data.lines);
       setTimeout(() => setOpponentAttackAnimation(0), 500);

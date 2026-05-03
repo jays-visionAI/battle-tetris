@@ -20,7 +20,7 @@ export interface GameState {
   paused: boolean;
 }
 
-export type GameEventType = 'line_clear' | 'attack_sent' | 'attack_received' | 'game_over';
+export type GameEventType = 'line_clear' | 'attack_sent' | 'attack_received' | 'game_over' | 'board_changed';
 
 export interface GameEvent {
   type: GameEventType;
@@ -134,6 +134,7 @@ export class TetrisGame {
 
     this.clearLines();
     this.spawnPiece();
+    this.emitEvent({ type: 'board_changed', data: null });
   }
 
   private clearLines(): number {
@@ -181,6 +182,7 @@ export class TetrisGame {
 
     if (!this.checkCollision(this.currentPiece.shape, newPos)) {
       this.currentPiece.position = newPos;
+      this.emitEvent({ type: 'board_changed', data: null });
       return true;
     }
     return false;
@@ -193,6 +195,7 @@ export class TetrisGame {
 
     if (!this.checkCollision(this.currentPiece.shape, newPos)) {
       this.currentPiece.position = newPos;
+      this.emitEvent({ type: 'board_changed', data: null });
       return true;
     }
     return false;
@@ -205,6 +208,7 @@ export class TetrisGame {
 
     if (!this.checkCollision(this.currentPiece.shape, newPos)) {
       this.currentPiece.position = newPos;
+      this.emitEvent({ type: 'board_changed', data: null });
       return true;
     }
 
@@ -224,6 +228,7 @@ export class TetrisGame {
 
     if (!this.checkCollision(newShape, this.currentPiece.position)) {
       this.currentPiece.shape = newShape;
+      this.emitEvent({ type: 'board_changed', data: null });
       return true;
     }
 
@@ -231,6 +236,7 @@ export class TetrisGame {
     if (!this.checkCollision(newShape, leftKick)) {
       this.currentPiece.position = leftKick;
       this.currentPiece.shape = newShape;
+      this.emitEvent({ type: 'board_changed', data: null });
       return true;
     }
 
@@ -238,6 +244,7 @@ export class TetrisGame {
     if (!this.checkCollision(newShape, rightKick)) {
       this.currentPiece.position = rightKick;
       this.currentPiece.shape = newShape;
+      this.emitEvent({ type: 'board_changed', data: null });
       return true;
     }
 
@@ -245,6 +252,7 @@ export class TetrisGame {
     if (!this.checkCollision(newShape, upKick)) {
       this.currentPiece.position = upKick;
       this.currentPiece.shape = newShape;
+      this.emitEvent({ type: 'board_changed', data: null });
       return true;
     }
 
@@ -258,6 +266,7 @@ export class TetrisGame {
       this.score += 2;
     }
     this.lockPiece();
+    this.emitEvent({ type: 'board_changed', data: null });
   }
 
   addAttackLines(count: number): void {

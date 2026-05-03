@@ -252,6 +252,7 @@ export default function Lobby({ socket, connectionStatus, initialPlayerName = ''
         playerId={playerId} 
         roomId={currentRoomId} 
         socket={socket}
+        players={players}
         onLeaveRoom={handleLeaveRoom}
       />
     );
