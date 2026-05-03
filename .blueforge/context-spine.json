@@ -2,7 +2,7 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-03T04:58:39.181Z",
+  "lastUpdatedAt": "2026-05-03T05:00:29.207Z",
   "decisions": [
     {
       "type": "general",
@@ -2833,6 +2833,16 @@
       "id": "d-1777784316256-18el",
       "createdAt": "2026-05-03T04:58:36.256Z",
       "updatedAt": "2026-05-03T04:58:36.256Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 개암 주소 알려줘",
+      "description": "개암 주소 알려줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777784423478-gxtv",
+      "createdAt": "2026-05-03T05:00:23.478Z",
+      "updatedAt": "2026-05-03T05:00:23.478Z"
     }
   ],
   "stageHistory": [
