@@ -14,6 +14,55 @@ interface RoomInfo {
   hasStarted: boolean;
 }
 
+function RoomListIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </svg>
+  );
+}
+
+function PlayerIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+function TargetIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffff00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+    </svg>
+  );
+}
+
+function LightningIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffff00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </svg>
+  );
+}
+
+function SkullIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="9" cy="10" r="1.5" fill="#ff4444" />
+      <circle cx="15" cy="10" r="1.5" fill="#ff4444" />
+      <path d="M8 16c1.5 2 4.5 2 6 0" />
+    </svg>
+  );
+}
+
 export default function Lobby() {
   const [playerName, setPlayerName] = useState('');
   const [roomId, setRoomId] = useState('');
@@ -138,15 +187,22 @@ export default function Lobby() {
     setShowRoomList(false);
   };
 
-  // 게임 화면으로 전환
+  // 게임 화면으로 전환 - socket을 props로 전달
   if (currentRoomId && playerId) {
-    return <Game playerId={playerId} roomId={currentRoomId} onLeaveRoom={() => {
-      setCurrentRoomId(null);
-      setPlayerId(null);
-      setPlayers([]);
-      setIsWaiting(false);
-      setShowRoomList(true);
-    }} />;
+    return (
+      <Game 
+        playerId={playerId} 
+        roomId={currentRoomId} 
+        socket={socket}
+        onLeaveRoom={() => {
+          setCurrentRoomId(null);
+          setPlayerId(null);
+          setPlayers([]);
+          setIsWaiting(false);
+          setShowRoomList(true);
+        }} 
+      />
+    );
   }
 
   return (
@@ -223,7 +279,7 @@ export default function Lobby() {
       {connected && showRoomList && (
         <div style={styles.roomListContainer}>
           <h3 style={styles.roomListTitle}>
-            📋 현재 방 목록 ({roomList.length}개)
+            <RoomListIcon /> 현재 방 목록 ({roomList.length}개)
           </h3>
           {roomList.length === 0 ? (
             <div style={styles.noRooms}>
@@ -254,7 +310,7 @@ export default function Lobby() {
                   </div>
                   <div style={styles.roomItemRight}>
                     <span style={styles.roomItemPlayers}>
-                      👤 {room.playerCount}/{room.maxPlayers}
+                      <PlayerIcon /> {room.playerCount}/{room.maxPlayers}
                     </span>
                     {!room.hasStarted && room.playerCount < room.maxPlayers && (
                       <span style={styles.roomItemJoin}>입장</span>
@@ -271,15 +327,15 @@ export default function Lobby() {
         <h3 style={styles.instructionsTitle}>게임 규칙</h3>
         <div style={styles.ruleList}>
           <div style={styles.ruleItem}>
-            <span style={styles.ruleIcon}>🎯</span>
+            <TargetIcon />
             <span>상대보다 오래 살아남으세요!</span>
           </div>
           <div style={styles.ruleItem}>
-            <span style={styles.ruleIcon}>⚡</span>
+            <LightningIcon />
             <span>줄을 삭제하면 상대방에게 공격 라인을 보냅니다</span>
           </div>
           <div style={styles.ruleItem}>
-            <span style={styles.ruleIcon}>💀</span>
+            <SkullIcon />
             <span>상대방의 블록이 꼭대기에 도달하면 승리!</span>
           </div>
         </div>
@@ -483,6 +539,10 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '15px',
     fontSize: '16px',
     textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
   },
   noRooms: {
     textAlign: 'center',
@@ -537,6 +597,9 @@ const styles: Record<string, React.CSSProperties> = {
   roomItemPlayers: {
     fontSize: '14px',
     color: '#888',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
   },
   roomItemJoin: {
     fontSize: '12px',
@@ -571,9 +634,6 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '10px',
     fontSize: '14px',
     color: '#aaa',
-  },
-  ruleIcon: {
-    fontSize: '20px',
   },
   controls: {
     marginTop: '30px',
