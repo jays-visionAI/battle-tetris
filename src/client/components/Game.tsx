@@ -12,6 +12,7 @@ interface Player {
 interface GameProps {
   playerId: string;
   roomId: string;
+  onLeaveRoom?: () => void;
 }
 
 interface OpponentState {
@@ -20,7 +21,7 @@ interface OpponentState {
   lines: number;
 }
 
-export function Game({ playerId, roomId }: GameProps) {
+export function Game({ playerId, roomId, onLeaveRoom }: GameProps) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [game, setGame] = useState<TetrisGame | null>(null);
   const [opponentState, setOpponentState] = useState<OpponentState>({
@@ -41,7 +42,6 @@ export function Game({ playerId, roomId }: GameProps) {
       const data = event.data as { lines: number; score: number };
       socket?.emit('attack', { lines: data.lines, fromPlayerId: playerId });
       
-      // Send own board state to opponent for sync
       if (gameRef.current) {
         const state = gameRef.current.getState();
         socket?.emit('board_update', {
@@ -58,7 +58,6 @@ export function Game({ playerId, roomId }: GameProps) {
       setAttackAnimation(data.lines);
       setTimeout(() => setAttackAnimation(0), 500);
       
-      // Send updated board state after attack
       if (gameRef.current) {
         const state = gameRef.current.getState();
         socket?.emit('board_update', {
@@ -78,8 +77,8 @@ export function Game({ playerId, roomId }: GameProps) {
     });
 
     newSocket.on('connect', () => {
-      console.log('Game connected to server');
-      newSocket.emit('join', { roomId, playerName: 'Player' });
+      console.log('게임 서버 연결됨');
+      newSocket.emit('join', { roomId, playerName: '플레이어' });
     });
 
     newSocket.on('attacked', (data: { lines: number }) => {
@@ -221,15 +220,20 @@ export function Game({ playerId, roomId }: GameProps) {
     socket?.emit('rematch_request');
   };
 
+  /** 방을 나가고 로비로 돌아가기 */
   const handleQuit = () => {
-    window.location.reload();
+    socket?.emit('leave_room');
+    socket?.disconnect();
+    if (onLeaveRoom) {
+      onLeaveRoom();
+    }
   };
 
   if (!game) {
     return (
       <div style={styles.loading}>
         <div style={styles.spinner} />
-        <p>게임을 로딩 중...</p>
+        <p>게임을 불러오는 중...</p>
       </div>
     );
   }
@@ -238,7 +242,7 @@ export function Game({ playerId, roomId }: GameProps) {
 
   return (
     <div style={styles.container}>
-      {/* Header */}
+      {/* 상단 정보 */}
       <div style={styles.header}>
         <div style={styles.playerInfo}>
           <span style={styles.label}>나</span>
@@ -256,9 +260,9 @@ export function Game({ playerId, roomId }: GameProps) {
         </div>
       </div>
 
-      {/* Game Area */}
+      {/* 게임 영역 */}
       <div style={styles.gameArea}>
-        {/* Player Board */}
+        {/* 내 보드 */}
         <div style={styles.boardContainer}>
           <h3 style={styles.boardTitle}>내 보드</h3>
           <Board 
@@ -273,7 +277,7 @@ export function Game({ playerId, roomId }: GameProps) {
           )}
         </div>
 
-        {/* Next Piece */}
+        {/* 사이드 패널 */}
         <div style={styles.sidePanel}>
           <div style={styles.nextPieceContainer}>
             <h4 style={styles.nextTitle}>다음 블록</h4>
@@ -301,19 +305,19 @@ export function Game({ playerId, roomId }: GameProps) {
             </div>
           </div>
 
-          {/* Attack Info */}
+          {/* 공격 정보 */}
           <div style={styles.attackInfo}>
-            <h4 style={styles.attackTitle}>⚔️ 공격 시스템</h4>
+            <h4 style={styles.attackTitle}>공격 시스템</h4>
             <div style={styles.attackList}>
               <span>1줄 삭제 → 1줄 공격</span>
               <span>2줄 삭제 → 2줄 공격</span>
               <span>3줄 삭제 → 3줄 공격</span>
-              <span style={styles.tetrisBonus}>4줄 (Tetris!) → 4줄 공격</span>
+              <span style={styles.tetrisBonus}>4줄 (테트리스!) → 4줄 공격</span>
             </div>
           </div>
         </div>
 
-        {/* Opponent Board */}
+        {/* 상대방 보드 */}
         <div style={styles.boardContainer}>
           <h3 style={styles.boardTitle}>{opponentName || '상대방'}</h3>
           <Board 
@@ -324,21 +328,21 @@ export function Game({ playerId, roomId }: GameProps) {
         </div>
       </div>
 
-      {/* Controls */}
+      {/* 조작법 */}
       <div style={styles.controls}>
         <span>← → 이동</span>
         <span>↑ 회전</span>
-        <span>↓ Soft Drop</span>
-        <span>Space Hard Drop</span>
+        <span>↓ 아래로 이동</span>
+        <span>Space 한 번에 내리기</span>
         <span>P 일시 정지</span>
       </div>
 
-      {/* Game Over Overlay */}
+      {/* 게임 오버 오버레이 */}
       {gameOver && (
         <div style={styles.gameOverOverlay}>
           <div style={styles.gameOverContent}>
             <h2 style={styles.gameOverTitle}>
-              {winner === playerId ? '🏆 승리!' : '💀 패배'}
+              {winner === playerId ? '승리!' : '패배'}
             </h2>
             <p style={styles.finalScore}>최종 점수: {state.score}</p>
             <div style={styles.buttonGroup}>
@@ -346,7 +350,7 @@ export function Game({ playerId, roomId }: GameProps) {
                 재경기
               </button>
               <button style={styles.quitButton} onClick={handleQuit}>
-                종료
+                로비로 돌아가기
               </button>
             </div>
           </div>

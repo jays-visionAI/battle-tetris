@@ -19,7 +19,7 @@ export function Board({
   const scale = isOpponent ? 0.6 : 1;
   const cellSize = 30 * scale;
 
-  // Create a display board that includes the current piece
+  // 현재 조각을 포함한 표시용 보드 생성
   const displayBoard = board.map(row => [...row]);
 
   if (currentPiece && !isOpponent) {

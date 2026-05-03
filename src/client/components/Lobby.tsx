@@ -7,6 +7,13 @@ interface Player {
   name: string;
 }
 
+interface RoomInfo {
+  id: string;
+  playerCount: number;
+  maxPlayers: number;
+  hasStarted: boolean;
+}
+
 export default function Lobby() {
   const [playerName, setPlayerName] = useState('');
   const [roomId, setRoomId] = useState('');
@@ -17,6 +24,8 @@ export default function Lobby() {
   const [connected, setConnected] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [roomList, setRoomList] = useState<RoomInfo[]>([]);
+  const [showRoomList, setShowRoomList] = useState(true);
 
   useEffect(() => {
     const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || '';
@@ -26,25 +35,30 @@ export default function Lobby() {
     });
 
     newSocket.on('connect', () => {
-      console.log('Connected to server');
+      console.log('서버에 연결됨');
       setConnected(true);
       setError(null);
     });
 
     newSocket.on('connect_error', () => {
-      console.log('Cannot connect to server - running in demo mode');
+      console.log('서버 연결 실패 - 데모 모드로 실행');
       setConnected(false);
     });
 
     newSocket.on('disconnect', () => {
-      console.log('Disconnected from server');
+      console.log('서버 연결 해제');
       setConnected(false);
+    });
+
+    newSocket.on('rooms_list', (rooms: RoomInfo[]) => {
+      setRoomList(rooms);
     });
 
     newSocket.on('joined', (data: { roomId: string; playerId: string; players: Player[] }) => {
       setCurrentRoomId(data.roomId);
       setPlayerId(data.playerId);
       setPlayers(data.players);
+      setShowRoomList(false);
     });
 
     newSocket.on('waiting', () => {
@@ -76,15 +90,9 @@ export default function Lobby() {
     
     setError(null);
     setIsWaiting(true);
-    
-    const simulatedRoomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const simulatedPlayerId = `player_${Date.now()}`;
-    
-    setCurrentRoomId(simulatedRoomId);
-    setPlayerId(simulatedPlayerId);
-    setPlayers([{ id: simulatedPlayerId, name: playerName || 'Player 1' }]);
+    setShowRoomList(false);
 
-    socket.emit('join', { roomId: undefined, playerName: playerName || 'Player 1' });
+    socket.emit('join', { roomId: undefined, playerName: playerName || '플레이어1' });
   };
 
   const handleJoinRoom = () => {
@@ -94,22 +102,26 @@ export default function Lobby() {
     }
     
     if (!socket || !connected) {
-      setError('서버에 연결되지 않았습니다. 데모 모드로 진행합니다.');
-      startDemoGame();
+      setError('서버에 연결되지 않았습니다.');
       return;
     }
     
     setError(null);
-    
-    const simulatedPlayerId = `player_${Date.now()}`;
-    setCurrentRoomId(roomId.toUpperCase());
-    setPlayerId(simulatedPlayerId);
-    setPlayers([
-      { id: 'opponent', name: 'Player 2' },
-      { id: simulatedPlayerId, name: playerName || 'Player 1' }
-    ]);
+    setShowRoomList(false);
 
-    socket.emit('join', { roomId: roomId.toUpperCase(), playerName: playerName || 'Player 1' });
+    socket.emit('join', { roomId: roomId.toUpperCase(), playerName: playerName || '플레이어1' });
+  };
+
+  const handleJoinRoomById = (targetRoomId: string) => {
+    if (!socket || !connected) {
+      setError('서버에 연결되지 않았습니다.');
+      return;
+    }
+
+    setError(null);
+    setShowRoomList(false);
+
+    socket.emit('join', { roomId: targetRoomId, playerName: playerName || '플레이어1' });
   };
 
   const startDemoGame = () => {
@@ -120,19 +132,27 @@ export default function Lobby() {
     setPlayerId(simulatedPlayerId);
     setPlayers([
       { id: 'demo_opponent', name: '데모 상대' },
-      { id: simulatedPlayerId, name: playerName || 'Player 1' }
+      { id: simulatedPlayerId, name: playerName || '플레이어1' }
     ]);
     setIsWaiting(false);
+    setShowRoomList(false);
   };
 
+  // 게임 화면으로 전환
   if (currentRoomId && playerId) {
-    return <Game playerId={playerId} roomId={currentRoomId} />;
+    return <Game playerId={playerId} roomId={currentRoomId} onLeaveRoom={() => {
+      setCurrentRoomId(null);
+      setPlayerId(null);
+      setPlayers([]);
+      setIsWaiting(false);
+      setShowRoomList(true);
+    }} />;
   }
 
   return (
     <div style={styles.container}>
       <div style={styles.titleContainer}>
-        <h1 style={styles.title}>BATTLE TETRIS</h1>
+        <h1 style={styles.title}>배틀 테트리스</h1>
         <p style={styles.subtitle}>실시간 1:1 테트리스 대결</p>
       </div>
 
@@ -153,7 +173,7 @@ export default function Lobby() {
             type="text"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
-            placeholder="플레이어 이름을 입력하세요"
+            placeholder="닉네임을 입력하세요"
             style={styles.input}
             maxLength={20}
           />
@@ -199,8 +219,56 @@ export default function Lobby() {
         )}
       </div>
 
+      {/* 방 목록 */}
+      {connected && showRoomList && (
+        <div style={styles.roomListContainer}>
+          <h3 style={styles.roomListTitle}>
+            📋 현재 방 목록 ({roomList.length}개)
+          </h3>
+          {roomList.length === 0 ? (
+            <div style={styles.noRooms}>
+              <p>아직 생성된 방이 없습니다.</p>
+              <p style={styles.noRoomsHint}>'새 방 만들기' 버튼을 눌러 방을 생성하세요!</p>
+            </div>
+          ) : (
+            <div style={styles.roomList}>
+              {roomList.map((room) => (
+                <div
+                  key={room.id}
+                  style={{
+                    ...styles.roomItem,
+                    opacity: room.hasStarted ? 0.5 : 1,
+                    cursor: room.hasStarted ? 'not-allowed' : 'pointer',
+                  }}
+                  onClick={() => {
+                    if (!room.hasStarted && room.playerCount < room.maxPlayers) {
+                      handleJoinRoomById(room.id);
+                    }
+                  }}
+                >
+                  <div style={styles.roomItemLeft}>
+                    <span style={styles.roomItemCode}>{room.id}</span>
+                    <span style={styles.roomItemStatus}>
+                      {room.hasStarted ? '게임 중' : '대기 중'}
+                    </span>
+                  </div>
+                  <div style={styles.roomItemRight}>
+                    <span style={styles.roomItemPlayers}>
+                      👤 {room.playerCount}/{room.maxPlayers}
+                    </span>
+                    {!room.hasStarted && room.playerCount < room.maxPlayers && (
+                      <span style={styles.roomItemJoin}>입장</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       <div style={styles.instructions}>
-        <h3 style={styles.instructionsTitle}>⚔️ 게임 규칙</h3>
+        <h3 style={styles.instructionsTitle}>게임 규칙</h3>
         <div style={styles.ruleList}>
           <div style={styles.ruleItem}>
             <span style={styles.ruleIcon}>🎯</span>
@@ -212,7 +280,7 @@ export default function Lobby() {
           </div>
           <div style={styles.ruleItem}>
             <span style={styles.ruleIcon}>💀</span>
-            <span>상대방의 블록이顶部에 도달하면 승리!</span>
+            <span>상대방의 블록이 꼭대기에 도달하면 승리!</span>
           </div>
         </div>
       </div>
@@ -222,8 +290,8 @@ export default function Lobby() {
         <div style={styles.controlList}>
           <span><strong>← →</strong> 좌우 이동</span>
           <span><strong>↑</strong> 회전</span>
-          <span><strong>↓</strong> Soft Drop</span>
-          <span><strong>Space</strong> Hard Drop</span>
+          <span><strong>↓</strong> 아래로 이동</span>
+          <span><strong>Space</strong> 한 번에 내리기</span>
           <span><strong>P</strong> 일시 정지</span>
         </div>
       </div>
@@ -235,6 +303,10 @@ export default function Lobby() {
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </div>
@@ -398,6 +470,81 @@ const styles: Record<string, React.CSSProperties> = {
   shareText: {
     fontSize: '14px',
     color: '#888',
+  },
+  // 방 목록 스타일
+  roomListContainer: {
+    marginTop: '30px',
+    width: '100%',
+    maxWidth: '400px',
+    animation: 'slideUp 0.5s ease-out',
+  },
+  roomListTitle: {
+    color: '#00ffff',
+    marginBottom: '15px',
+    fontSize: '16px',
+    textAlign: 'center',
+  },
+  noRooms: {
+    textAlign: 'center',
+    padding: '30px',
+    backgroundColor: '#1a1a2e',
+    borderRadius: '12px',
+    border: '2px dashed #333',
+  },
+  noRoomsHint: {
+    color: '#666',
+    fontSize: '13px',
+    marginTop: '8px',
+  },
+  roomList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+  roomItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '14px 18px',
+    backgroundColor: '#1a1a2e',
+    borderRadius: '10px',
+    border: '2px solid #333',
+    transition: 'all 0.2s',
+  },
+  roomItemLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  roomItemCode: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    color: '#fff',
+    letterSpacing: '2px',
+  },
+  roomItemStatus: {
+    fontSize: '12px',
+    padding: '3px 8px',
+    borderRadius: '4px',
+    backgroundColor: '#333',
+    color: '#aaa',
+  },
+  roomItemRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  roomItemPlayers: {
+    fontSize: '14px',
+    color: '#888',
+  },
+  roomItemJoin: {
+    fontSize: '12px',
+    padding: '4px 10px',
+    backgroundColor: '#00ffff',
+    color: '#0a0a1a',
+    borderRadius: '4px',
+    fontWeight: 'bold',
   },
   instructions: {
     marginTop: '30px',

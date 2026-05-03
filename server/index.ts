@@ -60,6 +60,26 @@ function cleanupRoom(roomId: string): void {
   }
 }
 
+/** 모든 방의 목록을 생성하여 반환 */
+function getRoomList(): Array<{ id: string; playerCount: number; maxPlayers: number; hasStarted: boolean }> {
+  const list: Array<{ id: string; playerCount: number; maxPlayers: number; hasStarted: boolean }> = [];
+  rooms.forEach((room) => {
+    list.push({
+      id: room.id,
+      playerCount: room.players.size,
+      maxPlayers: 2,
+      hasStarted: room.gameStarted,
+    });
+  });
+  return list;
+}
+
+/** 모든 연결된 클라이언트에게 방 목록 브로드캐스트 */
+function broadcastRoomList(): void {
+  const roomList = getRoomList();
+  io.emit('rooms_list', roomList);
+}
+
 const app = express();
 const httpServer = createServer(app);
 
@@ -69,6 +89,15 @@ const io = new Server(httpServer, {
     origin: process.env.CLIENT_URL || '*',
     methods: ['GET', 'POST'],
   },
+});
+
+// Health check 엔드포인트 (Render.com 로드밸런서용)
+app.get('/health', (_req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    rooms: rooms.size,
+    connections: io.engine.clientsCount,
+  });
 });
 
 // 프로덕션: 빌드된 클라이언트 파일 제공
@@ -81,9 +110,12 @@ app.get('*', (req, res) => {
 });
 
 io.on('connection', (socket: Socket) => {
-  console.log(`Client connected: ${socket.id}`);
+  console.log(`클라이언트 연결됨: ${socket.id}`);
 
   let currentRoomId: string | null = null;
+
+  // 새 클라이언트가 접속하면 현재 방 목록 전송
+  socket.emit('rooms_list', getRoomList());
 
   socket.on('join', (data: { roomId?: string; playerName: string }) => {
     const room = getOrCreateRoom(data.roomId);
@@ -92,7 +124,7 @@ io.on('connection', (socket: Socket) => {
     const player: Player = {
       id: socket.id,
       socket,
-      name: data.playerName || `Player ${room.players.size + 1}`,
+      name: data.playerName || `플레이어 ${room.players.size + 1}`,
       board: createEmptyBoard(),
       score: 0,
       lines: 0,
@@ -101,7 +133,7 @@ io.on('connection', (socket: Socket) => {
     room.players.set(socket.id, player);
     socket.join(room.id);
 
-    console.log(`Player ${player.name} (${socket.id}) joined room ${room.id}`);
+    console.log(`플레이어 ${player.name}(${socket.id}) 방 ${room.id} 입장`);
 
     const playersInRoom = Array.from(room.players.values()).map(p => ({
       id: p.id,
@@ -114,19 +146,46 @@ io.on('connection', (socket: Socket) => {
       players: playersInRoom,
     });
 
+    // 방 목록 브로드캐스트
+    broadcastRoomList();
+
     if (room.players.size === 2 && !room.gameStarted) {
       room.gameStarted = true;
       io.to(room.id).emit('game_start', {
         players: playersInRoom,
       });
-      console.log(`Game started in room ${room.id}`);
+      console.log(`게임 시작! 방 ${room.id}`);
     } else {
       socket.emit('waiting', { roomId: room.id });
       socket.to(room.id).emit('player_joined', {
         playerId: socket.id,
-        playerName: data.playerName || `Player ${room.players.size}`,
+        playerName: data.playerName || `플레이어 ${room.players.size}`,
       });
     }
+  });
+
+  socket.on('leave_room', () => {
+    if (!currentRoomId) return;
+
+    const room = rooms.get(currentRoomId);
+    if (!room) return;
+
+    const player = room.players.get(socket.id);
+    room.players.delete(socket.id);
+    socket.leave(currentRoomId);
+
+    if (player) {
+      console.log(`플레이어 ${player.name}(${socket.id}) 방 ${currentRoomId} 퇴장`);
+      room.players.forEach((p) => {
+        p.socket.emit('opponent_left', { name: player.name });
+      });
+    }
+
+    cleanupRoom(currentRoomId);
+    currentRoomId = null;
+
+    // 방 목록 브로드캐스트
+    broadcastRoomList();
   });
 
   socket.on('attack', (data: { lines: number; fromPlayerId: string }) => {
@@ -135,7 +194,7 @@ io.on('connection', (socket: Socket) => {
     const room = rooms.get(currentRoomId);
     if (!room) return;
 
-    console.log(`Player ${data.fromPlayerId} sending ${data.lines} lines of attack`);
+    console.log(`플레이어 ${data.fromPlayerId}가 ${data.lines}줄 공격 전송`);
     
     room.players.forEach((player) => {
       if (player.id !== data.fromPlayerId) {
@@ -209,7 +268,7 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log(`Client disconnected: ${socket.id}`);
+    console.log(`클라이언트 연결 해제: ${socket.id}`);
     
     if (currentRoomId) {
       const room = rooms.get(currentRoomId);
@@ -226,14 +285,17 @@ io.on('connection', (socket: Socket) => {
         cleanupRoom(currentRoomId);
       }
     }
+
+    // 방 목록 브로드캐스트
+    broadcastRoomList();
   });
 });
 
 const PORT = process.env.PORT || 3001;
 
 httpServer.listen(PORT, () => {
-  console.log(`🎮 Battle Tetris server running on port ${PORT}`);
-  console.log(`📦 Client files served from: ${path.join(__dirname, '../dist/client')}`);
+  console.log(`🎮 Battle Tetris 서버 실행 중 (포트 ${PORT})`);
+  console.log(`📦 클라이언트 파일 제공 경로: ${path.join(__dirname, '../dist/client')}`);
 });
 
 export { io, rooms };
