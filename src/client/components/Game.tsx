@@ -313,27 +313,58 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
         <div style={styles.sidePanel}>
           <div style={styles.nextPieceContainer}>
             <h4 style={styles.nextTitle}>다음 블록</h4>
-            <div style={styles.nextPiece}>
-              {state.nextPiece && (
-                <div style={styles.nextPiecePreview}>
-                  {state.nextPiece.shape.map((row, y) => (
-                    <div key={y} style={styles.nextPieceRow}>
-                      {row.map((cell, x) => (
-                        <div
-                          key={x}
-                          style={{
-                            width: '25px',
-                            height: '25px',
-                            backgroundColor: cell ? state.nextPiece!.color : 'transparent',
-                            border: cell ? '1px solid rgba(255,255,255,0.3)' : 'none',
-                            borderRadius: '2px',
-                          }}
-                        />
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div key={`next-wrapper-${state.nextPiece?.type}-${renderTick}`} style={styles.nextPiece}>
+              {state.nextPiece && (() => {
+                const shape = state.nextPiece.shape;
+                // Find the bounding box of actual filled cells
+                let minY = shape.length, maxY = 0, minX = shape[0].length, maxX = 0;
+                let hasCell = false;
+                for (let y = 0; y < shape.length; y++) {
+                  for (let x = 0; x < shape[y].length; x++) {
+                    if (shape[y][x]) {
+                      minY = Math.min(minY, y);
+                      maxY = Math.max(maxY, y);
+                      minX = Math.min(minX, x);
+                      maxX = Math.max(maxX, x);
+                      hasCell = true;
+                    }
+                  }
+                }
+                if (!hasCell) return null;
+                const croppedShape = shape.slice(minY, maxY + 1).map(row => row.slice(minX, maxX + 1));
+                const cellSize = 25;
+                return (
+                  <div key={`next-${state.nextPiece.type}-${renderTick}`} style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '1px',
+                    padding: '4px',
+                  }}>
+                    {croppedShape.map((row, y) => (
+                      <div key={y} style={{
+                        display: 'flex',
+                        gap: '1px',
+                      }}>
+                        {row.map((cell, x) => (
+                          <div
+                            key={x}
+                            style={{
+                              width: `${cellSize}px`,
+                              height: `${cellSize}px`,
+                              backgroundColor: cell ? state.nextPiece!.color : 'transparent',
+                              border: cell ? '1px solid rgba(255,255,255,0.3)' : 'none',
+                              borderRadius: '2px',
+                              boxShadow: cell ? `inset 0 0 4px rgba(255,255,255,0.2)` : 'none',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
           </div>
 

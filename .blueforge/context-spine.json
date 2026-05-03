@@ -2,7 +2,7 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-03T05:00:29.207Z",
+  "lastUpdatedAt": "2026-05-03T05:46:19.861Z",
   "decisions": [
     {
       "type": "general",
@@ -2520,81 +2520,81 @@
       "type": "general",
       "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
       "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777777320426-i4t5",
       "createdAt": "2026-05-03T03:02:00.426Z",
-      "updatedAt": "2026-05-03T03:02:00.426Z"
+      "updatedAt": "2026-05-03T05:11:25.264Z"
     },
     {
       "type": "general",
       "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
       "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777777456237-sx9i",
       "createdAt": "2026-05-03T03:04:16.237Z",
-      "updatedAt": "2026-05-03T03:04:16.237Z"
+      "updatedAt": "2026-05-03T05:11:25.264Z"
     },
     {
       "type": "general",
       "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
       "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777778393164-8l97",
       "createdAt": "2026-05-03T03:19:53.164Z",
-      "updatedAt": "2026-05-03T03:19:53.164Z"
+      "updatedAt": "2026-05-03T05:23:01.550Z"
     },
     {
       "type": "general",
       "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
       "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777778528954-fx0t",
       "createdAt": "2026-05-03T03:22:08.954Z",
-      "updatedAt": "2026-05-03T03:22:08.954Z"
+      "updatedAt": "2026-05-03T05:23:01.550Z"
     },
     {
       "type": "general",
       "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
       "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777779087784-68gi",
       "createdAt": "2026-05-03T03:31:27.784Z",
-      "updatedAt": "2026-05-03T03:31:27.784Z"
+      "updatedAt": "2026-05-03T05:32:11.244Z"
     },
     {
       "type": "general",
       "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
       "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777779223511-420j",
       "createdAt": "2026-05-03T03:33:43.511Z",
-      "updatedAt": "2026-05-03T03:33:43.511Z"
+      "updatedAt": "2026-05-03T05:34:43.532Z"
     },
     {
       "type": "general",
       "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
       "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777779535437-tirf",
       "createdAt": "2026-05-03T03:38:55.437Z",
-      "updatedAt": "2026-05-03T03:38:55.437Z"
+      "updatedAt": "2026-05-03T05:39:14.543Z"
     },
     {
       "type": "general",
       "title": "User request: 이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
       "description": "이전 대화에서 파악한 대로 소스를 바로 수정하고 배포해줘",
-      "status": "pending",
+      "status": "completed",
       "source": "user",
       "id": "d-1777779670948-v43m",
       "createdAt": "2026-05-03T03:41:10.948Z",
-      "updatedAt": "2026-05-03T03:41:10.948Z"
+      "updatedAt": "2026-05-03T05:41:48.965Z"
     },
     {
       "type": "general",
@@ -2843,6 +2843,170 @@
       "id": "d-1777784423478-gxtv",
       "createdAt": "2026-05-03T05:00:23.478Z",
       "updatedAt": "2026-05-03T05:00:23.478Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 어찌 하여 접속은 되었으나 상대방 플레이가 안보임..",
+      "description": "어찌 하여 접속은 되었으나 상대방 플레이가 안보임..",
+      "status": "completed",
+      "source": "user",
+      "id": "d-1777785084631-4ja0",
+      "createdAt": "2026-05-03T05:11:24.631Z",
+      "updatedAt": "2026-05-03T05:23:01.554Z"
+    },
+    {
+      "type": "feature",
+      "title": "kimi-k2.6-vision: 어찌 하여 접속은 되었으나 상대방 플레이가 안보임..",
+      "description": "먼저 현재 소스 코드를 확인해서 상대방 보드 동기화 문제를 파악하겠습니다.\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"src/client/App.tsx\"}</parameter>\n</invoke>\n\n<invoke name=\"file_read\">\n<parameter name=\"argumen",
+      "status": "active",
+      "source": "agent",
+      "relatedFiles": [
+        "src/client/App.tsx",
+        "src/client/components/Game.tsx",
+        "src/client/components/Board.tsx",
+        "server/index.ts",
+        "src/client/components/Lobby.tsx",
+        "src/client/game/TetrisGame.ts",
+        "src/client/main.tsx",
+        "index.html"
+      ],
+      "tags": [
+        "kimi-k2.6-vision",
+        "vision_analysis"
+      ],
+      "id": "d-1777785781285-uvwr",
+      "createdAt": "2026-05-03T05:23:01.285Z",
+      "updatedAt": "2026-05-03T05:23:01.285Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 두 플레이어가 플페이 상황을 보게 해주어야 하니 그래서 웹소켓방식으로 구현한건데 이것을 구현할 방법을 찾아줘",
+      "description": "두 플레이어가 플페이 상황을 보게 해주어야 하니 그래서 웹소켓방식으로 구현한건데 이것을 구현할 방법을 찾아줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777785785521-tkag",
+      "createdAt": "2026-05-03T05:23:05.521Z",
+      "updatedAt": "2026-05-03T05:23:05.521Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 두명이 온라인으로 플레이할때 내가 블록하나를 떨어뜨리고 두번째 블록부터 겹쳐보이며 에러발생",
+      "description": "두명이 온라인으로 플레이할때 내가 블록하나를 떨어뜨리고 두번째 블록부터 겹쳐보이며 에러발생",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786027810-2bs7",
+      "createdAt": "2026-05-03T05:27:07.810Z",
+      "updatedAt": "2026-05-03T05:27:07.810Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786118644-89ss",
+      "createdAt": "2026-05-03T05:28:38.644Z",
+      "updatedAt": "2026-05-03T05:28:38.644Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786269766-3scq",
+      "createdAt": "2026-05-03T05:31:09.766Z",
+      "updatedAt": "2026-05-03T05:31:09.766Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786330951-122z",
+      "createdAt": "2026-05-03T05:32:10.951Z",
+      "updatedAt": "2026-05-03T05:32:10.951Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786482931-59f3",
+      "createdAt": "2026-05-03T05:34:42.931Z",
+      "updatedAt": "2026-05-03T05:34:42.931Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786542605-vyai",
+      "createdAt": "2026-05-03T05:35:42.605Z",
+      "updatedAt": "2026-05-03T05:35:42.605Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786694995-w3ms",
+      "createdAt": "2026-05-03T05:38:14.995Z",
+      "updatedAt": "2026-05-03T05:38:14.995Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786754295-4j49",
+      "createdAt": "2026-05-03T05:39:14.295Z",
+      "updatedAt": "2026-05-03T05:39:14.295Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786908393-oqw9",
+      "createdAt": "2026-05-03T05:41:48.393Z",
+      "updatedAt": "2026-05-03T05:41:48.393Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777786965953-xyme",
+      "createdAt": "2026-05-03T05:42:45.953Z",
+      "updatedAt": "2026-05-03T05:42:45.953Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777787120402-5bjy",
+      "createdAt": "2026-05-03T05:45:20.402Z",
+      "updatedAt": "2026-05-03T05:45:20.402Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "description": "내가 말한 겹쳐보인다는 말은 최상단에 다음 블록 보여주는 부분이 블록이 두개가 겹쳐보인다는 말..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777787177634-7jwa",
+      "createdAt": "2026-05-03T05:46:17.634Z",
+      "updatedAt": "2026-05-03T05:46:17.634Z"
     }
   ],
   "stageHistory": [

@@ -78,11 +78,18 @@ export class TetrisGame {
     this.refillBag();
 
     if (this.nextPiece) {
-      this.currentPiece = this.nextPiece;
+      // Deep copy to prevent reference sharing between currentPiece and nextPiece
+      this.currentPiece = {
+        type: this.nextPiece.type,
+        shape: this.nextPiece.shape.map(row => [...row]),
+        position: { ...this.nextPiece.position },
+        color: this.nextPiece.color,
+      };
     } else {
       this.currentPiece = this.createTetromino(this.getNextPieceType());
     }
 
+    // Create new nextPiece as a completely fresh object
     this.nextPiece = this.createTetromino(this.getNextPieceType());
 
     if (this.checkCollision(this.currentPiece.shape, this.currentPiece.position)) {
@@ -262,11 +269,13 @@ export class TetrisGame {
   hardDrop(): void {
     if (!this.currentPiece || this.gameOver || this.paused) return;
 
+    let dropDistance = 0;
     while (this.moveDown()) {
-      this.score += 2;
+      dropDistance++;
     }
-    this.lockPiece();
-    this.emitEvent({ type: 'board_changed', data: null });
+    this.score += dropDistance * 2;
+    // moveDown() already calls lockPiece() when piece can't move down,
+    // which emits board_changed. No need to call lockPiece() again.
   }
 
   addAttackLines(count: number): void {
@@ -300,10 +309,23 @@ export class TetrisGame {
   }
 
   getState(): GameState {
+    // Ensure nextPiece is always available (defensive copy)
+    const safeNextPiece = this.nextPiece ? {
+      type: this.nextPiece.type,
+      shape: this.nextPiece.shape.map(row => [...row]),
+      position: { ...this.nextPiece.position },
+      color: this.nextPiece.color,
+    } : null;
+
     return {
-      board: this.board,
-      currentPiece: this.currentPiece,
-      nextPiece: this.nextPiece,
+      board: this.board.map(row => [...row]),
+      currentPiece: this.currentPiece ? {
+        type: this.currentPiece.type,
+        shape: this.currentPiece.shape.map(row => [...row]),
+        position: { ...this.currentPiece.position },
+        color: this.currentPiece.color,
+      } : null,
+      nextPiece: safeNextPiece,
       score: this.score,
       level: this.level,
       lines: this.lines,
@@ -368,6 +390,8 @@ export class TetrisGame {
     this.paused = false;
     this.dropInterval = 1000;
     this.lastDropTime = 0;
+    // bag을 채운 후 spawnPiece 호출
+    this.refillBag();
     this.spawnPiece();
   }
 
