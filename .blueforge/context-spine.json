@@ -2,7 +2,7 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-03T00:39:02.471Z",
+  "lastUpdatedAt": "2026-05-03T00:39:43.843Z",
   "decisions": [
     {
       "type": "general",
@@ -2254,6 +2254,16 @@
       "id": "d-1777768735699-ddz9",
       "createdAt": "2026-05-03T00:38:55.699Z",
       "updatedAt": "2026-05-03T00:38:55.699Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 계획은 충분히 세웟으니 배포해달라고",
+      "description": "계획은 충분히 세웟으니 배포해달라고",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1777768782790-sksl",
+      "createdAt": "2026-05-03T00:39:42.790Z",
+      "updatedAt": "2026-05-03T00:39:42.790Z"
     }
   ],
   "stageHistory": [
