@@ -108,6 +108,7 @@ export default function Lobby({
   const [showSettings, setShowSettings] = useState(false);
   const [settingsServerUrl, setSettingsServerUrl] = useState(serverUrl || '');
   const [gameStarted, setGameStarted] = useState(false);
+  const [showJoinForm, setShowJoinForm] = useState(false);
 
   // Sync connectionStatus prop into local state
   useEffect(() => {
@@ -195,6 +196,12 @@ export default function Lobby({
   }, [socket]);
 
   const handleCreateRoom = () => {
+    // 닉네임 필수 체크
+    if (!playerName.trim()) {
+      setError('닉네임을 입력해주세요');
+      return;
+    }
+    
     if (!socket || !connected) {
       setError('서버에 연결되지 않았습니다. 데모 모드로 진행합니다.');
       startDemoGame();
@@ -205,10 +212,27 @@ export default function Lobby({
     setIsWaiting(true);
     setShowRoomList(false);
 
-    socket.emit('join', { roomId: undefined, playerName: playerName || '플레이어1' });
+    socket.emit('join', { roomId: undefined, playerName: playerName.trim() });
+  };
+
+  // 방 참가 버튼 클릭 시 닉네임 먼저 확인
+  const handleShowJoinForm = () => {
+    // 닉네임 필수 체크
+    if (!playerName.trim()) {
+      setError('먼저 닉네임을 입력해주세요');
+      return;
+    }
+    setShowJoinForm(true);
+    setError(null);
   };
 
   const handleJoinRoom = () => {
+    // 닉네임 체크
+    if (!playerName.trim()) {
+      setError('닉네임을 입력해주세요');
+      return;
+    }
+    
     if (!roomId.trim()) {
       setError('방 코드를 입력해주세요');
       return;
@@ -222,10 +246,16 @@ export default function Lobby({
     setError(null);
     setShowRoomList(false);
 
-    socket.emit('join', { roomId: roomId.toUpperCase(), playerName: playerName || '플레이어1' });
+    socket.emit('join', { roomId: roomId.toUpperCase(), playerName: playerName.trim() });
   };
 
   const handleJoinRoomById = (targetRoomId: string) => {
+    // 닉네임 체크
+    if (!playerName.trim()) {
+      setError('닉네임을 입력해주세요');
+      return;
+    }
+    
     if (!socket || !connected) {
       setError('서버에 연결되지 않았습니다.');
       return;
@@ -234,10 +264,15 @@ export default function Lobby({
     setError(null);
     setShowRoomList(false);
 
-    socket.emit('join', { roomId: targetRoomId, playerName: playerName || '플레이어1' });
+    socket.emit('join', { roomId: targetRoomId, playerName: playerName.trim() });
   };
 
   const startDemoGame = () => {
+    if (!playerName.trim()) {
+      setError('닉네임을 입력해주세요');
+      return;
+    }
+    
     const simulatedRoomId = 'DEMO' + Math.random().toString(36).substring(2, 6).toUpperCase();
     const simulatedPlayerId = `demo_${Date.now()}`;
     
@@ -245,7 +280,7 @@ export default function Lobby({
     setPlayerId(simulatedPlayerId);
     setPlayers([
       { id: 'demo_opponent', name: '데모 상대' },
-      { id: simulatedPlayerId, name: playerName || '플레이어1' }
+      { id: simulatedPlayerId, name: playerName.trim() }
     ]);
     setIsWaiting(false);
     setShowRoomList(false);
@@ -326,43 +361,81 @@ export default function Lobby({
 
       <div style={styles.card}>
         <div style={styles.inputGroup}>
-          <label style={styles.label}>닉네임</label>
+          <label style={styles.label}>
+            닉네임 <span style={{ color: '#ff4444' }}>*필수</span>
+          </label>
           <input
             type="text"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
-            placeholder="닉네임을 입력하세요"
-            style={styles.input}
+            placeholder="플레이어 이름"
+            style={{
+              ...styles.input,
+              borderColor: !playerName.trim() && error ? '#ff4444' : '#333',
+            }}
             maxLength={20}
           />
         </div>
 
-        <div style={styles.divider}>
-          <span style={styles.dividerText}>또는</span>
-        </div>
-
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>방 코드 입력</label>
-          <div style={styles.joinRow}>
-            <input
-              type="text"
-              value={roomId}
-              onChange={(e) => setRoomId(e.target.value.toUpperCase())}
-              placeholder="ABC123"
-              style={styles.input}
-              maxLength={6}
-            />
-            <button style={styles.joinButton} onClick={handleJoinRoom}>
-              참가
-            </button>
-          </div>
-        </div>
-
         {error && <p style={styles.error}>{error}</p>}
 
+        {/* 방 참가하기 - 토글 */}
         <button 
-          style={styles.createButton} 
+          style={{
+            ...styles.joinToggleButton,
+            backgroundColor: showJoinForm ? '#1a1a2e' : 'transparent',
+            borderColor: showJoinForm ? '#ff9900' : '#666',
+          }} 
+          onClick={handleShowJoinForm}
+        >
+          {showJoinForm ? '방 참가 취소' : '방 참가하기'}
+        </button>
+
+        {/* 방 코드 입력 폼 - 토글 표시 */}
+        {showJoinForm && (
+          <div style={styles.joinFormContainer}>
+            <label style={styles.label}>상대방의 방 코드</label>
+            <div style={styles.joinRow}>
+              <input
+                type="text"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value.toUpperCase())}
+                placeholder="ABC123"
+                style={styles.input}
+                maxLength={6}
+              />
+              <button 
+                style={{
+                  ...styles.joinButton,
+                  backgroundColor: '#ff9900',
+                  color: '#0a0a1a',
+                  opacity: !roomId.trim() ? 0.5 : 1,
+                  cursor: !roomId.trim() ? 'not-allowed' : 'pointer',
+                }} 
+                onClick={handleJoinRoom}
+                disabled={!roomId.trim()}
+              >
+                입장
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div style={styles.divider}>
+          <span style={styles.dividerLine}></span>
+          <span style={styles.dividerText}>또는</span>
+          <span style={styles.dividerLine}></span>
+        </div>
+
+        {/* 새 방 만들기 */}
+        <button 
+          style={{
+            ...styles.createButton,
+            opacity: !playerName.trim() ? 0.6 : 1,
+            cursor: !playerName.trim() ? 'not-allowed' : 'pointer',
+          }} 
           onClick={handleCreateRoom}
+          disabled={!playerName.trim()}
         >
           {isWaiting ? '방 생성 중...' : '새 방 만들기'}
         </button>
@@ -653,17 +726,42 @@ const styles: Record<string, React.CSSProperties> = {
     transition: 'all 0.3s',
     whiteSpace: 'nowrap',
   },
+  joinToggleButton: {
+    width: '100%',
+    padding: '14px',
+    fontSize: '16px',
+    backgroundColor: 'transparent',
+    color: '#ff9900',
+    border: '2px solid #666',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    transition: 'all 0.3s',
+    marginTop: '10px',
+  },
   divider: {
     display: 'flex',
     alignItems: 'center',
-    margin: '30px 0',
+    margin: '25px 0',
+  },
+  dividerLine: {
+    flex: 1,
+    height: '1px',
+    backgroundColor: '#333',
   },
   dividerText: {
-    flex: 1,
-    textAlign: 'center',
+    padding: '0 15px',
     color: '#666',
     fontSize: '12px',
     textTransform: 'uppercase',
+    letterSpacing: '2px',
+  },
+  joinFormContainer: {
+    marginTop: '15px',
+    padding: '20px',
+    backgroundColor: '#0a0a1a',
+    borderRadius: '12px',
+    border: '2px solid #ff9900',
   },
   createButton: {
     width: '100%',

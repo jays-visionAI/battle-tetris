@@ -513,6 +513,8 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
           <h3 style={styles.boardTitle}>{opponentName || '상대방'}</h3>
           <Board 
             board={opponentState.board} 
+            currentPiece={opponentState.currentPiece}
+            nextPieceColor={opponentState.nextPiece?.color}
             isOpponent={true}
             attackAnimation={opponentAttackAnimation}
           />
