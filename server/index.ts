@@ -21,6 +21,10 @@ interface Room {
   id: string;
   players: Map<string, Player>;
   gameStarted: boolean;
+  gameState: 'waiting' | 'countdown' | 'playing' | 'finished';
+  hostId?: string; // 방 생성자
+  startRequestedBy?: string; // 시작 요청한 플레이어
+  countdownTimer?: NodeJS.Timeout;
 }
 
 const rooms = new Map<string, Room>();
@@ -39,6 +43,7 @@ function createRoom(): Room {
     id,
     players: new Map(),
     gameStarted: false,
+    gameState: 'waiting',
   };
   rooms.set(id, room);
   return room;
@@ -148,6 +153,11 @@ io.on('connection', (socket: Socket) => {
     const room = getOrCreateRoom(data.roomId);
     currentRoomId = room.id;
 
+    // 첫 번째 플레이어면 호스트로 설정
+    if (room.players.size === 0) {
+      room.hostId = socket.id;
+    }
+
     const player: Player = {
       id: socket.id,
       socket,
@@ -167,27 +177,31 @@ io.on('connection', (socket: Socket) => {
       name: p.name,
     }));
 
+    const isHost = socket.id === room.hostId;
+    const isSecondPlayer = room.players.size === 2 && !isHost;
+
     socket.emit('joined', {
       roomId: room.id,
       playerId: socket.id,
       players: playersInRoom,
+      isHost,
+      canStartGame: isSecondPlayer,
+      gameState: room.gameState,
     });
 
     // 방 목록 브로드캐스트
     broadcastRoomList();
 
-    if (room.players.size === 2 && !room.gameStarted) {
-      room.gameStarted = true;
-      console.log(`[Server] 게임 시작! 방 ${room.id}`);
-      io.to(room.id).emit('game_start', {
-        players: playersInRoom,
-      });
-    } else {
-      socket.emit('waiting', { roomId: room.id });
+    if (room.players.size === 2) {
+      // 2명이 입장했을 때
       socket.to(room.id).emit('player_joined', {
         playerId: socket.id,
         playerName: data.playerName || `플레이어 ${room.players.size}`,
+        roomFull: true,
       });
+    } else {
+      // 호스트가 입장한 경우 (대기 중)
+      socket.emit('waiting_for_player', { roomId: room.id });
     }
   });
 
@@ -230,6 +244,43 @@ io.on('connection', (socket: Socket) => {
     });
   });
 
+  // 실시간 게임플레이 액션 처리 (모든 조작을 실시간 공유)
+  socket.on('gameplay_action', (data: {
+    action: string;
+    data: any;
+    board: (string | null)[][];
+    currentPiece: any;
+    nextPiece: any;
+    score: number;
+    lines: number;
+    level: number;
+    fromPlayerId: string;
+    timestamp: number;
+  }) => {
+    if (!currentRoomId) return;
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) return;
+
+    // 같은 방의 다른 플레이어에게 즉시 전송
+    room.players.forEach((p) => {
+      if (p.id !== data.fromPlayerId) {
+        p.socket.emit('gameplay_action', {
+          action: data.action,
+          data: data.data,
+          board: data.board,
+          currentPiece: data.currentPiece,
+          nextPiece: data.nextPiece,
+          score: data.score,
+          lines: data.lines,
+          level: data.level,
+          fromPlayerId: data.fromPlayerId,
+          timestamp: data.timestamp,
+        });
+      }
+    });
+  });
+
   socket.on('board_update', (data: { 
     board: (string | null)[][]; 
     score: number; 
@@ -260,15 +311,20 @@ io.on('connection', (socket: Socket) => {
     });
   });
 
-  socket.on('game_over', (data: { winnerId: string; loserId: string }) => {
+  socket.on('game_over', (data: { winnerId: string; loserId: string; winnerName: string; loserName: string }) => {
     if (!currentRoomId) return;
     
     const room = rooms.get(currentRoomId);
     if (!room) return;
 
+    room.gameState = 'finished';
+    room.gameStarted = false;
+
     io.to(room.id).emit('game_end', {
       winnerId: data.winnerId,
       loserId: data.loserId,
+      winnerName: data.winnerName,
+      loserName: data.loserName,
     });
   });
 
@@ -279,6 +335,106 @@ io.on('connection', (socket: Socket) => {
     if (!room) return;
 
     socket.to(room.id).emit('rematch_requested', { from: socket.id });
+  });
+
+  // 게임 시작 요청 (두 번째 플레이어만 가능)
+  socket.on('request_start', () => {
+    if (!currentRoomId) return;
+    
+    const room = rooms.get(currentRoomId);
+    if (!room || room.gameState !== 'waiting' || room.players.size !== 2) return;
+
+    const isSecondPlayer = socket.id !== room.hostId;
+    if (!isSecondPlayer) return; // 호스트는 시작 불가
+
+    // 카운트다운 시작
+    room.gameState = 'countdown';
+    room.startRequestedBy = socket.id;
+    
+    console.log(`[Server] 게임 시작 카운트다운! 방 ${room.id}`);
+    
+    let countdown = 3;
+    io.to(room.id).emit('countdown_start', { count: countdown });
+    
+    const countdownInterval = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        io.to(room.id).emit('countdown_tick', { count: countdown });
+      } else {
+        clearInterval(countdownInterval);
+        
+        // 게임 시작!
+        room.gameState = 'playing';
+        room.gameStarted = true;
+        
+        const playersInRoom = Array.from(room.players.values()).map(p => ({
+          id: p.id,
+          name: p.name,
+        }));
+        
+        io.to(room.id).emit('game_start', {
+          players: playersInRoom,
+        });
+        
+        console.log(`[Server] 게임 시작! 방 ${room.id}`);
+      }
+    }, 1000);
+  });
+
+  // Replay 요청
+  socket.on('replay_request', (data: { fromPlayerId: string; fromPlayerName: string }) => {
+    if (!currentRoomId) return;
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) return;
+
+    // 상대방에게 Replay 요청 전달
+    room.players.forEach((player) => {
+      if (player.id !== data.fromPlayerId) {
+        player.socket.emit('replay_requested', {
+          fromPlayerId: data.fromPlayerId,
+          fromPlayerName: data.fromPlayerName,
+        });
+      }
+    });
+  });
+
+  // Replay 수락
+  socket.on('replay_accept', (data: { fromPlayerId: string }) => {
+    if (!currentRoomId) return;
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) return;
+
+    // 카운트다운 시작
+    room.gameState = 'countdown';
+    
+    let countdown = 3;
+    io.to(room.id).emit('countdown_start', { count: countdown });
+    
+    const countdownInterval = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        io.to(room.id).emit('countdown_tick', { count: countdown });
+      } else {
+        clearInterval(countdownInterval);
+        
+        // 게임 재시작!
+        room.gameState = 'playing';
+        room.gameStarted = true;
+        
+        const playersInRoom = Array.from(room.players.values()).map(p => ({
+          id: p.id,
+          name: p.name,
+        }));
+        
+        io.to(room.id).emit('replay_start', {
+          players: playersInRoom,
+        });
+        
+        console.log(`[Server] 게임 재시작! 방 ${room.id}`);
+      }
+    }, 1000);
   });
 
   socket.on('rematch_accept', () => {

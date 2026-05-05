@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
-import Game from './Game';
 
 interface Player {
   id: string;
@@ -18,9 +17,17 @@ interface LobbyProps {
   socket: Socket | null;
   connectionStatus?: 'connecting' | 'connected' | 'error';
   initialPlayerName?: string;
+  gameState?: 'lobby' | 'waiting' | 'countdown' | 'playing' | 'finished';
+  roomId?: string;
+  players?: Array<{ id: string; name: string }>;
+  isHost?: boolean;
+  canStartGame?: boolean;
   serverUrl?: string;
   onSettingsChange?: (settings: { serverUrl?: string; playerName?: string }) => void;
   onLeaveRoom?: () => void;
+  onStartGame?: () => void;
+  onReplayRequest?: () => void;
+  onReplayAccept?: () => void;
 }
 
 function RoomListIcon() {
@@ -72,7 +79,22 @@ function SkullIcon() {
   );
 }
 
-export default function Lobby({ socket, connectionStatus, initialPlayerName = '', serverUrl = '', onSettingsChange, onLeaveRoom }: LobbyProps) {
+export default function Lobby({ 
+  socket, 
+  connectionStatus, 
+  initialPlayerName = '', 
+  gameState = 'lobby',
+  roomId: propsRoomId = '',
+  players: propsPlayers = [],
+  isHost = false,
+  canStartGame = false,
+  serverUrl = '', 
+  onSettingsChange, 
+  onLeaveRoom,
+  onStartGame,
+  onReplayRequest,
+  onReplayAccept
+}: LobbyProps) {
   const [playerName, setPlayerName] = useState(initialPlayerName);
   const [roomId, setRoomId] = useState('');
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
@@ -245,18 +267,7 @@ export default function Lobby({ socket, connectionStatus, initialPlayerName = ''
     }
   };
 
-  // 게임 화면으로 전환
-  if (currentRoomId && playerId && gameStarted) {
-    return (
-      <Game 
-        playerId={playerId} 
-        roomId={currentRoomId} 
-        socket={socket}
-        players={players}
-        onLeaveRoom={handleLeaveRoom}
-      />
-    );
-  }
+  // 게임은 App.tsx에서 별도로 처리함
 
   return (
     <div style={styles.container}>
@@ -356,12 +367,58 @@ export default function Lobby({ socket, connectionStatus, initialPlayerName = ''
           {isWaiting ? '방 생성 중...' : '새 방 만들기'}
         </button>
 
-        {isWaiting && currentRoomId && (
+        {/* 게임 상태에 따른 UI */}
+        {gameState === 'waiting' && propsRoomId && (
           <div style={styles.waitingContainer}>
             <div style={styles.spinner} />
-            <p style={styles.waitingText}>상대방을 기다리는 중...</p>
-            <p style={styles.roomCode}>방 코드: <strong>{currentRoomId}</strong></p>
-            <p style={styles.shareText}>이 코드를 상대방에게 공유하세요</p>
+            {isHost ? (
+              <>
+                <p style={styles.waitingText}>상대방을 기다리는 중...</p>
+                <p style={styles.roomCode}>방 코드: <strong>{propsRoomId}</strong></p>
+                <p style={styles.shareText}>이 코드를 상대방에게 공유하세요</p>
+              </>
+            ) : (
+              <>
+                <p style={styles.waitingText}>방에 입장했습니다.</p>
+                <p style={styles.roomCode}>방 코드: <strong>{propsRoomId}</strong></p>
+                
+                {/* 두 번째 플레이어 시작 버튼 */}
+                {canStartGame && (
+                  <div style={{ marginTop: '2rem' }}>
+                    <p style={styles.shareText}>플레이어 {propsPlayers.find(p => p.id !== (socket?.id))?.name}이 입장했습니다!</p>
+                    <button 
+                      style={{
+                        ...styles.createButton,
+                        backgroundColor: '#00ff00',
+                        color: '#000',
+                        fontWeight: 'bold',
+                        animation: 'glow 2s infinite',
+                      }}
+                      onClick={onStartGame}
+                    >
+                      🎮 Start Game!
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+            
+            <div style={styles.playersInRoom}>
+              <h4 style={{ color: '#00ffff', marginBottom: '1rem' }}>참가자 ({propsPlayers.length}/2)</h4>
+              {propsPlayers.map(player => (
+                <div key={player.id} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '0.5rem',
+                  color: player.id === socket?.id ? '#00ff00' : '#ffffff'
+                }}>
+                  <span>👤</span>
+                  <span>{player.name} {player.id === socket?.id ? '(나)' : ''}</span>
+                  {player.id === propsPlayers.find(p => isHost && p.id === socket?.id)?.id && <span>👑</span>}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -785,5 +842,12 @@ const styles: Record<string, React.CSSProperties> = {
     flexWrap: 'wrap',
     fontSize: '12px',
     color: '#666',
+  },
+  playersInRoom: {
+    marginTop: '2rem',
+    padding: '1rem',
+    backgroundColor: 'rgba(0, 255, 255, 0.1)',
+    borderRadius: '8px',
+    border: '1px solid rgba(0, 255, 255, 0.3)',
   },
 };

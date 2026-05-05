@@ -22,7 +22,7 @@ export function Board({
   // 현재 조각을 포함한 표시용 보드 생성
   const displayBoard = board.map(row => [...row]);
 
-  if (currentPiece && !isOpponent) {
+  if (currentPiece) {
     const { shape, color, position } = currentPiece;
     for (let y = 0; y < shape.length; y++) {
       for (let x = 0; x < shape[y].length; x++) {

@@ -3,6 +3,7 @@ import { TetrisGame } from '../game/TetrisGame';
 import Board from './Board';
 import { Socket } from 'socket.io-client';
 import { BOARD_HEIGHT, BOARD_WIDTH } from '../game/constants';
+import { soundManager } from '../utils/SoundManager';
 
 interface Player {
   id: string;
@@ -10,25 +11,32 @@ interface Player {
 }
 
 interface GameProps {
-  playerId: string;
-  roomId: string;
   socket: Socket | null;
+  roomId: string;
   players?: Player[];
   onLeaveRoom?: () => void;
 }
 
 interface OpponentState {
   board: (string | null)[][];
+  currentPiece?: any;
+  nextPiece?: any;
   score: number;
   lines: number;
+  level?: number;
+  lastAction?: string;
 }
 
-export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GameProps) {
+export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
   const [renderTick, setRenderTick] = useState(0);
   const [opponentState, setOpponentState] = useState<OpponentState>({
     board: Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(null)),
+    currentPiece: null,
+    nextPiece: null,
     score: 0,
     lines: 0,
+    level: 1,
+    lastAction: '',
   });
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
@@ -38,6 +46,9 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
   const gameRef = useRef<TetrisGame | null>(null);
   const animationRef = useRef<number>(0);
   const gameInitializedRef = useRef(false);
+  const bgmRef = useRef<HTMLAudioElement | null>(null);
+
+  const playerId = socket?.id || '';
 
   useEffect(() => {
     if (players && players.length > 0) {
@@ -48,9 +59,42 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
     }
   }, [players, playerId]);
 
+  // BGM 시스템 초기화 (Sound Manager로 교체)
+  useEffect(() => {
+    // BGM 시작
+    soundManager.startBGM();
+
+    return () => {
+      // 게임 종료 시 BGM 정지
+      soundManager.stopBGM();
+    };
+  }, []);
+
   const getGame = useCallback(() => gameRef.current, []);
 
   const lastBoardUpdateRef = useRef(0);
+
+  // 실시간 게임 상태 전송 (모든 조작을 즉시 전송)
+  const sendGameplayAction = useCallback((action: string, data: unknown = null) => {
+    if (!socket) return;
+    
+    const g = getGame();
+    if (g) {
+      const state = g.getState();
+      socket.emit('gameplay_action', {
+        action,
+        data,
+        board: state.board,
+        currentPiece: state.currentPiece,
+        nextPiece: state.nextPiece,
+        score: state.score,
+        lines: state.lines,
+        level: state.level,
+        fromPlayerId: playerId,
+        timestamp: Date.now(),
+      });
+    }
+  }, [socket, playerId, getGame]);
 
   const sendBoardUpdate = useCallback(() => {
     if (!socket) return;
@@ -74,20 +118,45 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
     if (event.type === 'line_clear') {
       const data = event.data as { lines: number; score: number };
       socket?.emit('attack', { lines: data.lines, fromPlayerId: playerId });
-      sendBoardUpdate();
+      sendGameplayAction('line_clear', data);
+      
+      // 공격 보낼 때 효과음 (라인 수에 따라 다르게)
+      soundManager.playAttackSend(data.lines);
     }
 
     if (event.type === 'attack_received') {
       const data = event.data as { lines: number };
       setAttackAnimation(data.lines);
       setTimeout(() => setAttackAnimation(0), 500);
-      sendBoardUpdate();
+      sendGameplayAction('attack_received', data);
+      
+      // 공격 받을 때 효과음
+      soundManager.playAttackReceive(data.lines);
     }
 
     if (event.type === 'board_changed') {
-      sendBoardUpdate();
+      sendGameplayAction('board_changed');
     }
-  }, [socket, playerId, sendBoardUpdate]);
+
+    if (event.type === 'game_over') {
+      setGameOver(true);
+      soundManager.stopBGM();
+      
+      // 게임 오버 정보를 서버에 전송
+      const data = event.data as { winnerId: string; loserId: string };
+      const winnerPlayer = players?.find(p => p.id === data.winnerId);
+      const loserPlayer = players?.find(p => p.id === data.loserId);
+      
+      socket?.emit('game_over', {
+        winnerId: data.winnerId,
+        loserId: data.loserId,
+        winnerName: winnerPlayer?.name || '승자',
+        loserName: loserPlayer?.name || '패자',
+      });
+      
+      sendGameplayAction('game_over', data);
+    }
+  }, [socket, playerId, sendGameplayAction]);
 
   // Socket 이벤트 리스너 설정
   useEffect(() => {
@@ -103,15 +172,53 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
       }
       setOpponentAttackAnimation(data.lines);
       setTimeout(() => setOpponentAttackAnimation(0), 500);
+      
+      // 공격받을 때 강렬한 효과음
+      try {
+        const attackAudio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj');
+        attackAudio.volume = 0.3;
+        attackAudio.play().catch(() => {});
+      } catch (e) {
+        // 효과음 재생 실패 시 무시
+      }
     };
 
     const onBoardUpdate = (data: { board: (string | null)[][]; score: number; lines: number; fromPlayerId: string }) => {
       if (data.fromPlayerId !== playerId) {
-        setOpponentState({
+        setOpponentState(prev => ({
+          ...prev,
           board: data.board,
           score: data.score,
           lines: data.lines,
-        });
+        }));
+      }
+    };
+
+    // 100% 실시간 게임플레이 공유 리스너
+    const onGameplayAction = (data: {
+      action: string;
+      data: unknown;
+      board: (string | null)[][];
+      currentPiece: any;
+      nextPiece: any;
+      score: number;
+      lines: number;
+      level: number;
+      fromPlayerId: string;
+      timestamp: number;
+    }) => {
+      if (data.fromPlayerId !== playerId) {
+        // 상대방의 실시간 게임 상태를 완전히 동기화
+        setOpponentState(prev => ({
+          ...prev,
+          board: data.board,
+          currentPiece: data.currentPiece,
+          nextPiece: data.nextPiece,
+          score: data.score,
+          lines: data.lines,
+          level: data.level,
+          lastAction: data.action,
+        }));
       }
     };
 
@@ -158,6 +265,7 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
       }
     };
 
+    socket.on('gameplay_action', onGameplayAction);
     socket.on('attacked', onAttacked);
     socket.on('board_update', onBoardUpdate);
     socket.on('game_start', onGameStart);
@@ -167,6 +275,7 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
     socket.on('rematch_start', onRematchStart);
 
     return () => {
+      socket.off('gameplay_action', onGameplayAction);
       socket.off('attacked', onAttacked);
       socket.off('board_update', onBoardUpdate);
       socket.off('game_start', onGameStart);
@@ -212,41 +321,60 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
     };
   }, [handleGameEvent, getGame]);
 
-  // 키보드 이벤트
+  // 키보드 이벤트 (100% 실시간 공유)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const g = getGame();
       if (!g || g.isGameOver()) return;
 
+      let actionSent = false;
       switch (e.key) {
         case 'ArrowLeft':
-          g.moveLeft();
+          if (g.moveLeft()) {
+            sendGameplayAction('move_left');
+            actionSent = true;
+          }
           break;
         case 'ArrowRight':
-          g.moveRight();
+          if (g.moveRight()) {
+            sendGameplayAction('move_right');
+            actionSent = true;
+          }
           break;
         case 'ArrowDown':
-          g.moveDown();
+          if (g.moveDown()) {
+            sendGameplayAction('move_down');
+            actionSent = true;
+          }
           break;
         case 'ArrowUp':
-          g.rotate();
+          if (g.rotate()) {
+            sendGameplayAction('rotate');
+            actionSent = true;
+          }
           break;
         case ' ':
           e.preventDefault();
           g.hardDrop();
+          sendGameplayAction('hard_drop');
+          actionSent = true;
           break;
         case 'p':
         case 'P':
           g.togglePause();
+          sendGameplayAction('toggle_pause');
+          actionSent = true;
           break;
       }
       
-      setRenderTick(t => t + 1);
+      if (actionSent) {
+        setRenderTick(t => t + 1);
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [getGame]);
+  }, [getGame, sendGameplayAction]);
 
   const handleRematch = () => {
     socket?.emit('rematch_request');
@@ -313,7 +441,7 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
         <div style={styles.sidePanel}>
           <div style={styles.nextPieceContainer}>
             <h4 style={styles.nextTitle}>다음 블록</h4>
-            <div key={`next-wrapper-${state.nextPiece?.type}-${renderTick}`} style={styles.nextPiece}>
+            <div style={styles.nextPiece}>
               {state.nextPiece && (() => {
                 const shape = state.nextPiece.shape;
                 // Find the bounding box of actual filled cells
@@ -334,18 +462,18 @@ export function Game({ playerId, roomId, socket, players, onLeaveRoom }: GamePro
                 const croppedShape = shape.slice(minY, maxY + 1).map(row => row.slice(minX, maxX + 1));
                 const cellSize = 25;
                 return (
-                  <div key={`next-${state.nextPiece.type}-${renderTick}`} style={{
+                  <div style={{
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '1px',
-                    padding: '4px',
+                    gap: '2px',
+                    padding: '8px',
                   }}>
                     {croppedShape.map((row, y) => (
                       <div key={y} style={{
                         display: 'flex',
-                        gap: '1px',
+                        gap: '2px',
                       }}>
                         {row.map((cell, x) => (
                           <div
@@ -539,20 +667,14 @@ const styles: Record<string, React.CSSProperties> = {
     letterSpacing: '1px',
   },
   nextPiece: {
-    padding: '10px',
+    padding: '4px',
     backgroundColor: '#1a1a2e',
     borderRadius: '4px',
     border: '2px solid #333',
-  },
-  nextPiecePreview: {
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
-    gap: '2px',
-  },
-  nextPieceRow: {
-    display: 'flex',
-    gap: '2px',
+    justifyContent: 'center',
+    minHeight: '80px',
   },
   attackInfo: {
     padding: '15px',
