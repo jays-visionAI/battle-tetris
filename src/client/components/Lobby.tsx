@@ -11,6 +11,8 @@ interface RoomInfo {
   playerCount: number;
   maxPlayers: number;
   hasStarted: boolean;
+  hostName: string;
+  hostId: string;
 }
 
 interface LobbyProps {
@@ -96,7 +98,6 @@ export default function Lobby({
   onReplayAccept
 }: LobbyProps) {
   const [playerName, setPlayerName] = useState(initialPlayerName);
-  const [roomId, setRoomId] = useState('');
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [isWaiting, setIsWaiting] = useState(false);
@@ -108,7 +109,8 @@ export default function Lobby({
   const [showSettings, setShowSettings] = useState(false);
   const [settingsServerUrl, setSettingsServerUrl] = useState(serverUrl || '');
   const [gameStarted, setGameStarted] = useState(false);
-  const [showJoinForm, setShowJoinForm] = useState(false);
+  const [joiningRoomId, setJoiningRoomId] = useState<string | null>(null);
+  const [joinCodeInput, setJoinCodeInput] = useState('');
 
   // Sync connectionStatus prop into local state
   useEffect(() => {
@@ -169,6 +171,21 @@ export default function Lobby({
       setGameStarted(true);
     };
 
+    const onRoomDeleted = () => {
+      console.log('[Lobby] 방이 삭제되었습니다');
+      setCurrentRoomId(null);
+      setPlayerId(null);
+      setPlayers([]);
+      setIsWaiting(false);
+      setShowRoomList(true);
+      setGameStarted(false);
+    };
+
+    const onError = (data: { message: string }) => {
+      console.log('[Lobby] 서버 에러:', data.message);
+      setError(data.message);
+    };
+
     socket.on('connect', onConnect);
     socket.on('connect_error', onConnectError);
     socket.on('disconnect', onDisconnect);
@@ -177,6 +194,8 @@ export default function Lobby({
     socket.on('waiting', onWaiting);
     socket.on('player_joined', onPlayerJoined);
     socket.on('game_start', onGameStart);
+    socket.on('room_deleted', onRoomDeleted);
+    socket.on('error', onError);
 
     // 이미 연결되어 있으면 상태 업데이트
     if (socket.connected) {
@@ -192,6 +211,8 @@ export default function Lobby({
       socket.off('waiting', onWaiting);
       socket.off('player_joined', onPlayerJoined);
       socket.off('game_start', onGameStart);
+      socket.off('room_deleted', onRoomDeleted);
+      socket.off('error', onError);
     };
   }, [socket]);
 
@@ -213,40 +234,6 @@ export default function Lobby({
     setShowRoomList(false);
 
     socket.emit('join', { roomId: undefined, playerName: playerName.trim() });
-  };
-
-  // 방 참가 버튼 클릭 시 닉네임 먼저 확인
-  const handleShowJoinForm = () => {
-    // 닉네임 필수 체크
-    if (!playerName.trim()) {
-      setError('먼저 닉네임을 입력해주세요');
-      return;
-    }
-    setShowJoinForm(true);
-    setError(null);
-  };
-
-  const handleJoinRoom = () => {
-    // 닉네임 체크
-    if (!playerName.trim()) {
-      setError('닉네임을 입력해주세요');
-      return;
-    }
-    
-    if (!roomId.trim()) {
-      setError('방 코드를 입력해주세요');
-      return;
-    }
-    
-    if (!socket || !connected) {
-      setError('서버에 연결되지 않았습니다.');
-      return;
-    }
-    
-    setError(null);
-    setShowRoomList(false);
-
-    socket.emit('join', { roomId: roomId.toUpperCase(), playerName: playerName.trim() });
   };
 
   const handleJoinRoomById = (targetRoomId: string) => {
@@ -273,7 +260,7 @@ export default function Lobby({
       return;
     }
     
-    const simulatedRoomId = 'DEMO' + Math.random().toString(36).substring(2, 6).toUpperCase();
+    const simulatedRoomId = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
     const simulatedPlayerId = `demo_${Date.now()}`;
     
     setCurrentRoomId(simulatedRoomId);
@@ -379,48 +366,6 @@ export default function Lobby({
 
         {error && <p style={styles.error}>{error}</p>}
 
-        {/* 방 참가하기 - 토글 */}
-        <button 
-          style={{
-            ...styles.joinToggleButton,
-            backgroundColor: showJoinForm ? '#1a1a2e' : 'transparent',
-            borderColor: showJoinForm ? '#ff9900' : '#666',
-          }} 
-          onClick={handleShowJoinForm}
-        >
-          {showJoinForm ? '방 참가 취소' : '방 참가하기'}
-        </button>
-
-        {/* 방 코드 입력 폼 - 토글 표시 */}
-        {showJoinForm && (
-          <div style={styles.joinFormContainer}>
-            <label style={styles.label}>상대방의 방 코드</label>
-            <div style={styles.joinRow}>
-              <input
-                type="text"
-                value={roomId}
-                onChange={(e) => setRoomId(e.target.value.toUpperCase())}
-                placeholder="ABC123"
-                style={styles.input}
-                maxLength={6}
-              />
-              <button 
-                style={{
-                  ...styles.joinButton,
-                  backgroundColor: '#ff9900',
-                  color: '#0a0a1a',
-                  opacity: !roomId.trim() ? 0.5 : 1,
-                  cursor: !roomId.trim() ? 'not-allowed' : 'pointer',
-                }} 
-                onClick={handleJoinRoom}
-                disabled={!roomId.trim()}
-              >
-                입장
-              </button>
-            </div>
-          </div>
-        )}
-
         <div style={styles.divider}>
           <span style={styles.dividerLine}></span>
           <span style={styles.dividerText}>또는</span>
@@ -510,33 +455,152 @@ export default function Lobby({
           ) : (
             <div style={styles.roomList}>
               {roomList.map((room) => (
-                <div
-                  key={room.id}
-                  style={{
-                    ...styles.roomItem,
-                    opacity: room.hasStarted ? 0.5 : 1,
-                    cursor: room.hasStarted ? 'not-allowed' : 'pointer',
-                  }}
-                  onClick={() => {
-                    if (!room.hasStarted && room.playerCount < room.maxPlayers) {
-                      handleJoinRoomById(room.id);
-                    }
-                  }}
-                >
-                  <div style={styles.roomItemLeft}>
-                    <span style={styles.roomItemCode}>{room.id}</span>
-                    <span style={styles.roomItemStatus}>
-                      {room.hasStarted ? '게임 중' : '대기 중'}
-                    </span>
+                <div key={room.id}>
+                  <div
+                    style={{
+                      ...styles.roomItem,
+                      opacity: room.hasStarted ? 0.5 : 1,
+                      cursor: 'default',
+                    }}
+                  >
+                    <div style={styles.roomItemLeft}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={styles.roomItemHost}>{room.hostName}</span>
+                        {room.hostId === playerId && (
+                          <span style={{
+                            padding: '2px 8px',
+                            backgroundColor: '#00ff00',
+                            color: '#000',
+                            borderRadius: '10px',
+                            fontSize: '10px',
+                            fontWeight: 'bold',
+                          }}>
+                            나의 방
+                          </span>
+                        )}
+                        <span style={styles.roomItemStatus}>
+                          {room.hasStarted ? '게임 중' : '대기 중'}
+                        </span>
+                      </div>
+                    </div>
+                    <div style={styles.roomItemRight}>
+                      <span style={styles.roomItemPlayers}>
+                        <PlayerIcon /> {room.playerCount}/{room.maxPlayers}
+                      </span>
+                      {!room.hasStarted && room.playerCount < room.maxPlayers && (
+                        <button
+                          style={{
+                            ...styles.roomItemJoin,
+                            border: 'none',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => {
+                            if (!playerName.trim()) {
+                              setError('먼저 닉네임을 입력해주세요');
+                              return;
+                            }
+                            setError(null);
+                            setJoiningRoomId(room.id);
+                            setJoinCodeInput('');
+                          }}
+                        >
+                          입장
+                        </button>
+                      )}
+                      {room.hostId === playerId && !room.hasStarted && (
+                        <button
+                          style={{
+                            padding: '4px 8px',
+                            fontSize: '11px',
+                            backgroundColor: '#ff4444',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            marginLeft: '4px',
+                          }}
+                          onClick={() => {
+                            if (socket && connected) {
+                              socket.emit('delete_room');
+                            }
+                          }}
+                        >
+                          삭제
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <div style={styles.roomItemRight}>
-                    <span style={styles.roomItemPlayers}>
-                      <PlayerIcon /> {room.playerCount}/{room.maxPlayers}
-                    </span>
-                    {!room.hasStarted && room.playerCount < room.maxPlayers && (
-                      <span style={styles.roomItemJoin}>입장</span>
-                    )}
-                  </div>
+
+                  {/* 코드 입력 영역 */}
+                  {joiningRoomId === room.id && (
+                    <div style={styles.roomJoinForm}>
+                      <label style={{ ...styles.label, marginBottom: '6px', fontSize: '12px' }}>
+                        4자리 입장 코드 입력
+                      </label>
+                      <div style={styles.joinRow}>
+                        <input
+                          type="text"
+                          value={joinCodeInput}
+                          onChange={(e) => setJoinCodeInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                          placeholder="0000"
+                          style={{
+                            ...styles.input,
+                            textAlign: 'center',
+                            letterSpacing: '4px',
+                            fontSize: '18px',
+                            fontWeight: 'bold',
+                          }}
+                          maxLength={4}
+                          autoFocus
+                        />
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                        <button
+                          style={{
+                            flex: 1,
+                            padding: '10px',
+                            fontSize: '14px',
+                            backgroundColor: '#ff4444',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                          }}
+                          onClick={() => {
+                            setJoiningRoomId(null);
+                            setJoinCodeInput('');
+                          }}
+                        >
+                          취소
+                        </button>
+                        <button
+                          style={{
+                            flex: 2,
+                            padding: '10px',
+                            fontSize: '14px',
+                            backgroundColor: joinCodeInput === room.id ? '#00ff00' : '#333',
+                            color: joinCodeInput === room.id ? '#0a0a1a' : '#888',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: joinCodeInput === room.id ? 'pointer' : 'not-allowed',
+                            fontWeight: 'bold',
+                            transition: 'all 0.2s',
+                          }}
+                          disabled={joinCodeInput !== room.id}
+                          onClick={() => {
+                            if (joinCodeInput === room.id) {
+                              handleJoinRoomById(room.id);
+                              setJoiningRoomId(null);
+                              setJoinCodeInput('');
+                            }
+                          }}
+                        >
+                          참가하기
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -726,19 +790,6 @@ const styles: Record<string, React.CSSProperties> = {
     transition: 'all 0.3s',
     whiteSpace: 'nowrap',
   },
-  joinToggleButton: {
-    width: '100%',
-    padding: '14px',
-    fontSize: '16px',
-    backgroundColor: 'transparent',
-    color: '#ff9900',
-    border: '2px solid #666',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    transition: 'all 0.3s',
-    marginTop: '10px',
-  },
   divider: {
     display: 'flex',
     alignItems: 'center',
@@ -755,13 +806,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '12px',
     textTransform: 'uppercase',
     letterSpacing: '2px',
-  },
-  joinFormContainer: {
-    marginTop: '15px',
-    padding: '20px',
-    backgroundColor: '#0a0a1a',
-    borderRadius: '12px',
-    border: '2px solid #ff9900',
   },
   createButton: {
     width: '100%',
@@ -868,6 +912,11 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#fff',
     letterSpacing: '2px',
   },
+  roomItemHost: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#00ffff',
+  },
   roomItemStatus: {
     fontSize: '12px',
     padding: '3px 8px',
@@ -894,6 +943,16 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#0a0a1a',
     borderRadius: '4px',
     fontWeight: 'bold',
+  },
+  roomJoinForm: {
+    marginTop: '-4px',
+    marginBottom: '8px',
+    padding: '14px 18px',
+    backgroundColor: '#0f0f25',
+    border: '2px solid #ff9900',
+    borderTop: 'none',
+    borderRadius: '0 0 10px 10px',
+    animation: 'slideUp 0.2s ease-out',
   },
   instructions: {
     marginTop: '30px',

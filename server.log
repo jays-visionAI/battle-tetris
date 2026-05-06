@@ -1,15 +1,37 @@
+
+> battle-tetris@1.0.0 start
+> npm run build && npx tsx server/index.ts
+
+
+> battle-tetris@1.0.0 build
+> tsc && vite build
+
+[36mvite v5.4.0 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 74 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/client/[22m[32mindex.html                 [39m[1m[2m  0.54 kB[22m[1m[22m[2m │ gzip:   0.42 kB[22m
+[2mdist/client/[22m[2massets/[22m[35mindex-CXoXXt5j.css  [39m[1m[2m  0.75 kB[22m[1m[22m[2m │ gzip:   0.40 kB[22m
+[2mdist/client/[22m[2massets/[22m[36mindex-BScO_fY8.js   [39m[1m[33m509.27 kB[39m[22m[2m │ gzip: 145.91 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 1.92s[39m
 [Server] 클라이언트 파일 제공 경로: /Users/sangjaeseo/BlueforgeProjects/배틀테트리스/dist/client
 node:events:491
       throw er; // Unhandled 'error' event
       ^
 
 Error: listen EADDRINUSE: address already in use :::3001
-    at __node_internal_captureLargerStackTrace (node:internal/errors:490:5)
-    at __node_internal_uvExceptionWithHostPort (node:internal/errors:589:12)
+    at __node_internal_captureLarger[Server] 클라이언트 연결됨: W2PzZPGGOG35g0HtAAAC
+ernal_uvExceptionWithHostPort (node:internal/errors:589:12)
     at Server.setupListenHandle [as _listen2] (node:net:1740:16)
     at listenInCluster (node:net:1788:12)
     at Server.listen (node:net:1876:7)
-    at <anonymous> (/Users/sangjaeseo/BlueforgeProjects/배틀테트리스/server/index.ts:323:12)
+    at <anonymous> (/Users/sangjaeseo/BlueforgeProjects/배틀테트리스/server/index.ts:516:12)
     at ModuleJob.run (node:internal/modules/esm/module_job:194:25)
 Emitted 'error' event on Server instance at:
     at emitErrorNT (node:net:1767:8)

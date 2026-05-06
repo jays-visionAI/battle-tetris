@@ -23,6 +23,7 @@ interface Room {
   gameStarted: boolean;
   gameState: 'waiting' | 'countdown' | 'playing' | 'finished';
   hostId?: string; // 방 생성자
+  hostName?: string; // 방 생성자 닉네임
   startRequestedBy?: string; // 시작 요청한 플레이어
   countdownTimer?: NodeJS.Timeout;
 }
@@ -30,7 +31,9 @@ interface Room {
 const rooms = new Map<string, Room>();
 
 function generateRoomId(): string {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
+  // 4자리 숫자 코드 생성 (0000-9999)
+  const code = Math.floor(Math.random() * 10000);
+  return code.toString().padStart(4, '0');
 }
 
 function createEmptyBoard(): (string | null)[][] {
@@ -67,14 +70,16 @@ function cleanupRoom(roomId: string): void {
 }
 
 /** 모든 방의 목록을 생성하여 반환 */
-function getRoomList(): Array<{ id: string; playerCount: number; maxPlayers: number; hasStarted: boolean }> {
-  const list: Array<{ id: string; playerCount: number; maxPlayers: number; hasStarted: boolean }> = [];
+function getRoomList(): Array<{ id: string; playerCount: number; maxPlayers: number; hasStarted: boolean; hostName: string; hostId: string }> {
+  const list: Array<{ id: string; playerCount: number; maxPlayers: number; hasStarted: boolean; hostName: string; hostId: string }> = [];
   rooms.forEach((room) => {
     list.push({
       id: room.id,
       playerCount: room.players.size,
       maxPlayers: 2,
       hasStarted: room.gameStarted,
+      hostName: room.hostName || '알 수 없음',
+      hostId: room.hostId || '',
     });
   });
   return list;
@@ -156,6 +161,7 @@ io.on('connection', (socket: Socket) => {
     // 첫 번째 플레이어면 호스트로 설정
     if (room.players.size === 0) {
       room.hostId = socket.id;
+      room.hostName = data.playerName;
     }
 
     const player: Player = {
@@ -448,6 +454,37 @@ io.on('connection', (socket: Socket) => {
     });
 
     room.gameStarted = false;
+  });
+
+  // 방 삭제 요청 (호스트만 가능)
+  socket.on('delete_room', () => {
+    if (!currentRoomId) return;
+    
+    const room = rooms.get(currentRoomId);
+    if (!room) return;
+
+    // 호스트만 방 삭제 가능
+    if (socket.id !== room.hostId) {
+      socket.emit('error', { message: '방 삭제 권한이 없습니다' });
+      return;
+    }
+
+    console.log(`[Server] 방 ${currentRoomId} 삭제됨 (호스트 요청)`);
+
+    // 모든 플레이어에게 방 삭제 알림
+    io.to(room.id).emit('room_deleted', { roomId: currentRoomId });
+
+    // 모든 플레이어 퇴장
+    room.players.forEach((player) => {
+      player.socket.leave(room.id);
+    });
+
+    // 방 삭제
+    rooms.delete(currentRoomId);
+    currentRoomId = null;
+
+    // 방 목록 브로드캐스트
+    broadcastRoomList();
   });
 
   socket.on('disconnect', () => {
