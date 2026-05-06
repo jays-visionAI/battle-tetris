@@ -46,7 +46,7 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
   const gameRef = useRef<TetrisGame | null>(null);
   const animationRef = useRef<number>(0);
   const gameInitializedRef = useRef(false);
-  const bgmRef = useRef<HTMLAudioElement | null>(null);
+  const bgmStartedRef = useRef(false);
 
   const playerId = socket?.id || '';
 
@@ -59,14 +59,30 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
     }
   }, [players, playerId]);
 
-  // BGM 시스템 초기화 (Sound Manager로 교체)
+  // BGM 시스템 초기화 (첫 사용자 상호작용 후)
   useEffect(() => {
-    // BGM 시작
-    soundManager.startBGM();
+    // 키보드/마우스 첫 상호작용 시 BGM 시작
+    const startBGMOnInteraction = () => {
+      if (bgmStartedRef.current) return;
+      bgmStartedRef.current = true;
+      
+      soundManager.startBGM().catch(console.warn);
+      
+      // 리스너 제거
+      window.removeEventListener('keydown', startBGMOnInteraction);
+      window.removeEventListener('click', startBGMOnInteraction);
+      window.removeEventListener('touchstart', startBGMOnInteraction);
+    };
+
+    window.addEventListener('keydown', startBGMOnInteraction);
+    window.addEventListener('click', startBGMOnInteraction);
+    window.addEventListener('touchstart', startBGMOnInteraction);
 
     return () => {
-      // 게임 종료 시 BGM 정지
       soundManager.stopBGM();
+      window.removeEventListener('keydown', startBGMOnInteraction);
+      window.removeEventListener('click', startBGMOnInteraction);
+      window.removeEventListener('touchstart', startBGMOnInteraction);
     };
   }, []);
 

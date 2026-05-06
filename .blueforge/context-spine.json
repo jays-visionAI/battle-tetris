@@ -2,7 +2,7 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-06T00:11:51.199Z",
+  "lastUpdatedAt": "2026-05-06T00:42:43.534Z",
   "decisions": [
     {
       "type": "general",
@@ -3369,6 +3369,86 @@
       "id": "d-1778026309194-rxub",
       "createdAt": "2026-05-06T00:11:49.194Z",
       "updatedAt": "2026-05-06T00:11:49.194Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: BGM문제 해결했어?",
+      "description": "BGM문제 해결했어?",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778026489275-08vm",
+      "createdAt": "2026-05-06T00:14:49.275Z",
+      "updatedAt": "2026-05-06T00:14:49.275Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 인터넷에서 뒤져서 테트리스 BMG을 구하든 테트리스 BGM Mp3 파일을 구해서 넣어줘",
+      "description": "인터넷에서 뒤져서 테트리스 BMG을 구하든 테트리스 BGM Mp3 파일을 구해서 넣어줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778026584671-y98d",
+      "createdAt": "2026-05-06T00:16:24.671Z",
+      "updatedAt": "2026-05-06T00:16:24.671Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 너가 만든거로 해줘. mp3가 문제가 되는거 같으니 너가 만든거로 해보고 문제가 있다면 말해줄게",
+      "description": "너가 만든거로 해줘. mp3가 문제가 되는거 같으니 너가 만든거로 해보고 문제가 있다면 말해줄게",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778027526113-57yw",
+      "createdAt": "2026-05-06T00:32:06.113Z",
+      "updatedAt": "2026-05-06T00:32:06.113Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 너가 만든거로 해줘. mp3가 문제가 되는거 같으니 너가 만든거로 해보고 문제가 있다면 말해줄게",
+      "description": "너가 만든거로 해줘. mp3가 문제가 되는거 같으니 너가 만든거로 해보고 문제가 있다면 말해줄게",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778027727971-wtat",
+      "createdAt": "2026-05-06T00:35:27.971Z",
+      "updatedAt": "2026-05-06T00:35:27.971Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 너가 만든거로 해줘. mp3가 문제가 되는거 같으니 너가 만든거로 해보고 문제가 있다면 말해줄게",
+      "description": "너가 만든거로 해줘. mp3가 문제가 되는거 같으니 너가 만든거로 해보고 문제가 있다면 말해줄게",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778027921031-v0t5",
+      "createdAt": "2026-05-06T00:38:41.031Z",
+      "updatedAt": "2026-05-06T00:38:41.031Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: BGM문제 해결했어?",
+      "description": "BGM문제 해결했어?",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778028039444-xh6k",
+      "createdAt": "2026-05-06T00:40:39.444Z",
+      "updatedAt": "2026-05-06T00:40:39.444Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 커밋하고 깃헙에 푸시해줘",
+      "description": "커밋하고 깃헙에 푸시해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778028143049-pss8",
+      "createdAt": "2026-05-06T00:42:23.049Z",
+      "updatedAt": "2026-05-06T00:42:23.049Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 커밋하고 깃헙에 푸시해줘",
+      "description": "커밋하고 깃헙에 푸시해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778028161529-7q1d",
+      "createdAt": "2026-05-06T00:42:41.529Z",
+      "updatedAt": "2026-05-06T00:42:41.529Z"
     }
   ],
   "stageHistory": [

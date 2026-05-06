@@ -12,8 +12,8 @@ class SoundManager {
 
   private init() {
     try {
-      // BGM 초기화
-      this.bgm = new Audio('/tetris-bgm.mp3');
+      // BGM 초기화 (WAV 파일 우선, MP3 폴백)
+      this.bgm = new Audio('/tetris-bgm.wav');
       this.bgm.loop = true;
       this.bgm.volume = 0.3;
       
@@ -24,23 +24,39 @@ class SoundManager {
       this.attackReceive = new Audio('/attack-receive.mp3');
       this.attackReceive.volume = 0.8;
 
-      // 로드 이벤트 처리
+      // MP3 파일 로드 시도
       const sounds = [this.bgm, this.attackSend, this.attackReceive];
       let loadedCount = 0;
+      let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
       sounds.forEach(sound => {
         sound.addEventListener('canplaythrough', () => {
           loadedCount++;
-          if (loadedCount === sounds.length) {
+          if (loadedCount === sounds.length && !this.isInitialized) {
             this.isInitialized = true;
-            console.log('🎵 Sound Manager initialized');
+            if (timeoutId) clearTimeout(timeoutId);
+            console.log('🎵 Sound Manager initialized (audio files loaded)');
           }
         });
 
-        sound.addEventListener('error', (e) => {
-          console.warn(`⚠️ Sound load failed: ${sound.src}`, e);
+        sound.addEventListener('error', () => {
+          // MP3 로드 실패해도 Web Audio API 폴백으로 대체
+          loadedCount++;
+          if (loadedCount === sounds.length && !this.isInitialized) {
+            this.isInitialized = true;
+            if (timeoutId) clearTimeout(timeoutId);
+            console.log('🎵 Sound Manager initialized (Web Audio fallback)');
+          }
         });
       });
+
+      // 타임아웃: 3초 후에도 로드 안 되면 Web Audio 모드로 진행
+      timeoutId = setTimeout(() => {
+        if (!this.isInitialized) {
+          this.isInitialized = true;
+          console.log('🎵 Sound Manager initialized (timeout fallback)');
+        }
+      }, 3000);
 
     } catch (error) {
       console.warn('⚠️ Sound Manager initialization failed:', error);
@@ -51,15 +67,15 @@ class SoundManager {
   async startBGM() {
     if (this.isMuted) return;
     
-    // MP3 파일이 있으면 사용, 없으면 Web Audio API로 대체
+    // WAV/MP3 파일이 있으면 사용, 없으면 Web Audio API로 대체
     if (this.bgm) {
       try {
         this.bgm.currentTime = 0;
         await this.bgm.play();
-        console.log('🎵 BGM started (MP3)');
+        console.log('🎵 BGM started (WAV)');
         return;
       } catch (error) {
-        console.warn('⚠️ BGM MP3 play failed, trying Web Audio API:', error);
+        console.warn('⚠️ BGM WAV play failed, trying Web Audio API:', error);
       }
     }
     
