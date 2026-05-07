@@ -43,12 +43,22 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
   const [attackAnimation, setAttackAnimation] = useState(0);
   const [opponentName, setOpponentName] = useState<string>('');
   const [opponentAttackAnimation, setOpponentAttackAnimation] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const gameRef = useRef<TetrisGame | null>(null);
   const animationRef = useRef<number>(0);
   const gameInitializedRef = useRef(false);
   const bgmStartedRef = useRef(false);
 
   const playerId = socket?.id || '';
+
+  // 모바일 감지
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (players && players.length > 0) {
@@ -417,46 +427,47 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
   const state = g.getState();
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="game-container">
       {/* 상단 정보 */}
-      <div style={styles.header}>
-        <div style={styles.playerInfo}>
-          <span style={styles.label}>나</span>
-          <span style={styles.stat}>점수: {state.score}</span>
-          <span style={styles.stat}>줄: {state.lines}</span>
-          <span style={styles.stat}>레벨: {state.level}</span>
+      <div style={styles.header} className="game-header">
+        <div style={styles.playerInfo} className="player-info">
+          <span style={styles.label} className="label">나</span>
+          <span style={styles.stat} className="stat">점수: {state.score}</span>
+          <span style={styles.stat} className="stat">줄: {state.lines}</span>
+          <span style={styles.stat} className="stat">레벨: {state.level}</span>
         </div>
-        <div style={styles.versusContainer}>
-          <span style={styles.vsText}>VS</span>
+        <div style={styles.versusContainer} className="vs-container">
+          <span style={styles.vsText} className="vs-text">VS</span>
         </div>
-        <div style={styles.playerInfo}>
-          <span style={styles.labelOpponent}>{opponentName || '상대방'}</span>
-          <span style={styles.stat}>점수: {opponentState.score}</span>
-          <span style={styles.stat}>줄: {opponentState.lines}</span>
+        <div style={styles.playerInfo} className="player-info">
+          <span style={styles.labelOpponent} className="label-opponent">{opponentName || '상대방'}</span>
+          <span style={styles.stat} className="stat">점수: {opponentState.score}</span>
+          <span style={styles.stat} className="stat">줄: {opponentState.lines}</span>
         </div>
       </div>
 
       {/* 게임 영역 */}
-      <div style={styles.gameArea}>
+      <div style={styles.gameArea} className="game-area">
         {/* 내 보드 */}
-        <div style={styles.boardContainer}>
-          <h3 style={styles.boardTitle}>내 보드</h3>
+        <div style={styles.boardContainer} className="board-container-player">
+          <h3 style={styles.boardTitle} className="board-title">내 보드</h3>
           <Board 
             board={state.board} 
             currentPiece={state.currentPiece}
             attackAnimation={attackAnimation}
+            scale={isMobile ? 0.75 : 1}
           />
           {state.paused && (
-            <div style={styles.pauseOverlay}>
+            <div style={styles.pauseOverlay} className="pause-overlay-mobile">
               <span>일시 정지 (P키로 해제)</span>
             </div>
           )}
         </div>
 
         {/* 사이드 패널 */}
-        <div style={styles.sidePanel}>
-          <div style={styles.nextPieceContainer}>
-            <h4 style={styles.nextTitle}>다음 블록</h4>
+        <div style={styles.sidePanel} className="side-panel">
+          <div style={styles.nextPieceContainer} className="next-piece-container">
+            <h4 style={styles.nextTitle} className="next-title">다음 블록</h4>
             <div style={styles.nextPiece}>
               {state.nextPiece && (() => {
                 const shape = state.nextPiece.shape;
@@ -513,9 +524,9 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
           </div>
 
           {/* 공격 정보 */}
-          <div style={styles.attackInfo}>
-            <h4 style={styles.attackTitle}>공격 시스템</h4>
-            <div style={styles.attackList}>
+          <div style={styles.attackInfo} className="attack-info">
+            <h4 style={styles.attackTitle} className="attack-title">공격 시스템</h4>
+            <div style={styles.attackList} className="attack-list">
               <span>1줄 삭제 → 1줄 공격</span>
               <span>2줄 삭제 → 2줄 공격</span>
               <span>3줄 삭제 → 3줄 공격</span>
@@ -525,20 +536,21 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
         </div>
 
         {/* 상대방 보드 */}
-        <div style={styles.boardContainer}>
-          <h3 style={styles.boardTitle}>{opponentName || '상대방'}</h3>
+        <div style={styles.boardContainer} className="board-container-opponent">
+          <h3 style={styles.boardTitle} className="board-title">{opponentName || '상대방'}</h3>
           <Board 
             board={opponentState.board} 
             currentPiece={opponentState.currentPiece}
             nextPieceColor={opponentState.nextPiece?.color}
             isOpponent={true}
             attackAnimation={opponentAttackAnimation}
+            scale={isMobile ? 0.55 : 1}
           />
         </div>
       </div>
 
       {/* 조작법 */}
-      <div style={styles.controls}>
+      <div style={styles.controls} className="controls-bar">
         <span>← → 이동</span>
         <span>↑ 회전</span>
         <span>↓ 아래로 이동</span>
@@ -549,16 +561,16 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
       {/* 게임 오버 오버레이 */}
       {gameOver && (
         <div style={styles.gameOverOverlay}>
-          <div style={styles.gameOverContent}>
-            <h2 style={styles.gameOverTitle}>
+          <div style={styles.gameOverContent} className="game-over-content-mobile">
+            <h2 style={styles.gameOverTitle} className="game-over-title-mobile">
               {winner === playerId ? '승리!' : '패배'}
             </h2>
-            <p style={styles.finalScore}>최종 점수: {state.score}</p>
-            <div style={styles.buttonGroup}>
-              <button style={styles.rematchButton} onClick={handleRematch}>
+            <p style={styles.finalScore} className="final-score-mobile">최종 점수: {state.score}</p>
+            <div style={styles.buttonGroup} className="button-group-mobile">
+              <button style={styles.rematchButton} className="rematch-button-mobile" onClick={handleRematch}>
                 재경기
               </button>
-              <button style={styles.quitButton} onClick={handleQuit}>
+              <button style={styles.quitButton} className="quit-button-mobile" onClick={handleQuit}>
                 로비로 돌아가기
               </button>
             </div>
@@ -573,6 +585,190 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
         @keyframes pulse {
           0%, 100% { transform: scale(1); }
           50% { transform: scale(1.05); }
+        }
+
+        /* ===== 모바일 반응형 레이아웃 (768px 이하) ===== */
+        @media (max-width: 768px) {
+          .game-container {
+            padding: 8px !important;
+            min-height: 100dvh;
+          }
+
+          .game-header {
+            flex-direction: column !important;
+            gap: 8px !important;
+            padding: 10px 15px !important;
+            margin-bottom: 12px !important;
+            max-width: 100% !important;
+          }
+
+          .game-header .player-info {
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+            min-width: auto !important;
+            justify-content: center !important;
+          }
+
+          .game-header .player-info .label,
+          .game-header .player-info .label-opponent {
+            font-size: 14px !important;
+            width: 100% !important;
+            text-align: center !important;
+          }
+
+          .game-header .player-info .stat {
+            font-size: 11px !important;
+          }
+
+          .game-header .vs-container {
+            order: -1 !important;
+          }
+
+          .game-header .vs-text {
+            font-size: 22px !important;
+          }
+
+          .game-area {
+            flex-direction: column !important;
+            gap: 12px !important;
+            align-items: center !important;
+            width: 100% !important;
+          }
+
+          .board-container-player {
+            order: 1 !important;
+          }
+
+          .board-container-player .board-title {
+            font-size: 13px !important;
+            margin-bottom: 4px !important;
+          }
+
+          .side-panel {
+            order: 2 !important;
+            flex-direction: row !important;
+            gap: 12px !important;
+            min-width: auto !important;
+            width: 100% !important;
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+          }
+
+          .side-panel .next-piece-container {
+            order: 1 !important;
+          }
+
+          .side-panel .next-piece-container .next-title {
+            font-size: 11px !important;
+            margin-bottom: 4px !important;
+          }
+
+          .side-panel .next-piece {
+            min-height: auto !important;
+            padding: 2px !important;
+          }
+
+          .side-panel .attack-info {
+            order: 2 !important;
+            padding: 8px 12px !important;
+          }
+
+          .side-panel .attack-info .attack-title {
+            font-size: 10px !important;
+            margin-bottom: 4px !important;
+          }
+
+          .side-panel .attack-info .attack-list {
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            font-size: 9px !important;
+          }
+
+          .board-container-opponent {
+            order: 3 !important;
+          }
+
+          .board-container-opponent .board-title {
+            font-size: 12px !important;
+            margin-bottom: 4px !important;
+            color: #ff4444 !important;
+          }
+
+          .controls-bar {
+            order: 4 !important;
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+            margin-top: 12px !important;
+            padding: 8px 12px !important;
+            font-size: 10px !important;
+            justify-content: center !important;
+          }
+
+          .pause-overlay-mobile {
+            font-size: 14px !important;
+            padding: 12px 24px !important;
+          }
+
+          .game-over-content-mobile {
+            padding: 30px 20px !important;
+          }
+
+          .game-over-title-mobile {
+            font-size: 36px !important;
+          }
+
+          .final-score-mobile {
+            font-size: 20px !important;
+            margin-bottom: 24px !important;
+          }
+
+          .button-group-mobile {
+            flex-direction: column !important;
+            gap: 12px !important;
+          }
+
+          .rematch-button-mobile,
+          .quit-button-mobile {
+            padding: 12px 30px !important;
+            font-size: 16px !important;
+          }
+        }
+
+        /* ===== 작은 모바일 (480px 이하) ===== */
+        @media (max-width: 480px) {
+          .game-container {
+            padding: 4px !important;
+          }
+
+          .game-header {
+            padding: 8px 10px !important;
+            margin-bottom: 8px !important;
+          }
+
+          .game-header .vs-text {
+            font-size: 18px !important;
+          }
+
+          .game-area {
+            gap: 8px !important;
+          }
+
+          .side-panel {
+            gap: 8px !important;
+          }
+
+          .side-panel .attack-info .attack-list {
+            font-size: 8px !important;
+            gap: 4px !important;
+          }
+
+          .controls-bar {
+            gap: 6px !important;
+            font-size: 9px !important;
+            padding: 6px 8px !important;
+          }
         }
       `}</style>
     </div>

@@ -2,104 +2,8 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-06T00:42:43.534Z",
+  "lastUpdatedAt": "2026-05-07T04:56:07.588Z",
   "decisions": [
-    {
-      "type": "general",
-      "title": "User request: 개발 현황 요약해줘",
-      "description": "개발 현황 요약해줘",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777580049624-3gje",
-      "createdAt": "2026-04-30T20:14:09.624Z",
-      "updatedAt": "2026-04-30T22:14:53.083Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 개발 현황 요약해줘",
-      "description": "개발 현황 요약해줘",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777580685511-adur",
-      "createdAt": "2026-04-30T20:24:45.511Z",
-      "updatedAt": "2026-04-30T22:29:16.421Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 실제로 원격접속해서 게임할 수 잇게 해보자",
-      "description": "실제로 원격접속해서 게임할 수 잇게 해보자",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777581325117-owam",
-      "createdAt": "2026-04-30T20:35:25.117Z",
-      "updatedAt": "2026-04-30T22:56:28.767Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 실제로 원격접속해서 게임할 수 잇게 해보자",
-      "description": "실제로 원격접속해서 게임할 수 잇게 해보자",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777581537713-w516",
-      "createdAt": "2026-04-30T20:38:57.713Z",
-      "updatedAt": "2026-04-30T22:56:28.767Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 실제로 원격접속해서 게임할 수 잇게 해보자",
-      "description": "실제로 원격접속해서 게임할 수 잇게 해보자",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777581633743-z18h",
-      "createdAt": "2026-04-30T20:40:33.743Z",
-      "updatedAt": "2026-04-30T22:56:28.767Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 실제로 원격접속해서 게임할 수 잇게 해보자",
-      "description": "실제로 원격접속해서 게임할 수 잇게 해보자",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777582268642-gfpj",
-      "createdAt": "2026-04-30T20:51:08.642Z",
-      "updatedAt": "2026-04-30T20:54:14.751Z"
-    },
-    {
-      "type": "feature",
-      "title": "deepseek-v4-pro: 실제로 원격접속해서 게임할 수 잇게 해보자",
-      "description": "먼저 현재 프로젝트의 서버와 클라이언트 소켓 연결 설정을 확인하겠습니다.\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"server/index.ts\"}</parameter>\n</invoke>\n\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">",
-      "status": "completed",
-      "source": "agent",
-      "relatedFiles": [
-        "server/index.ts",
-        "src/client/components/Lobby.tsx",
-        "src/client/components/Game.tsx",
-        "tsconfig.json",
-        "package.json",
-        "vite.config.ts",
-        "DEPLOY.md",
-        "implementation_report.md",
-        "src/client/components/Board.tsx",
-        "src/client/game/TetrisGame.ts"
-      ],
-      "tags": [
-        "deepseek-v4-pro",
-        "code_implementation"
-      ],
-      "id": "d-1777582454584-p7m3",
-      "createdAt": "2026-04-30T20:54:14.584Z",
-      "updatedAt": "2026-04-30T22:56:28.767Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: Continue from where you left off. Complete any remaining work.",
-      "description": "Continue from where you left off. Complete any remaining work.",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777582456793-c4wy",
-      "createdAt": "2026-04-30T20:54:16.793Z",
-      "updatedAt": "2026-04-30T22:56:28.767Z"
-    },
     {
       "type": "general",
       "title": "User request: 재개해줘",
@@ -3449,6 +3353,126 @@
       "id": "d-1778028161529-7q1d",
       "createdAt": "2026-05-06T00:42:41.529Z",
       "updatedAt": "2026-05-06T00:42:41.529Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 배포완료?",
+      "description": "배포완료?",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778028653814-baj3",
+      "createdAt": "2026-05-06T00:50:53.814Z",
+      "updatedAt": "2026-05-06T00:50:53.814Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 환경에서 플레이 할 수 있도록 화면 레이아웃을 3등분해서 좌측의 2/3은 플레이어 화면으로 쓰고, 우측 1/3은 상대편 플레이화면을 작게",
+      "description": "모바일 환경에서 플레이 할 수 있도록 화면 레이아웃을 3등분해서 좌측의 2/3은 플레이어 화면으로 쓰고, 우측 1/3은 상대편 플레이화면을 작게 보여주는 레이아웃형태로 바구고 싶어. \n\n이에 맞게 디자인시안을 만들어줄래?",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778125448621-x39w",
+      "createdAt": "2026-05-07T03:44:08.621Z",
+      "updatedAt": "2026-05-07T03:44:08.621Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 환경에서 플레이 할 수 있도록 화면 레이아웃을 3등분해서 좌측의 2/3은 플레이어 화면으로 쓰고, 우측 1/3은 상대편 플레이화면을 작게",
+      "description": "모바일 환경에서 플레이 할 수 있도록 화면 레이아웃을 3등분해서 좌측의 2/3은 플레이어 화면으로 쓰고, 우측 1/3은 상대편 플레이화면을 작게 보여주는 레이아웃형태로 바구고 싶어. \n\n이에 맞게 디자인시안을 만들어줄래?",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778125574747-4ejg",
+      "createdAt": "2026-05-07T03:46:14.747Z",
+      "updatedAt": "2026-05-07T03:46:14.747Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 좋아 이렇게 구현해보자... 바로 진행해줘",
+      "description": "좋아 이렇게 구현해보자... 바로 진행해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778125721816-rnj1",
+      "createdAt": "2026-05-07T03:48:41.816Z",
+      "updatedAt": "2026-05-07T03:48:41.816Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 최적화 진해앻줘",
+      "description": "모바일 최적화 진해앻줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778127684218-d7c2",
+      "createdAt": "2026-05-07T04:21:24.218Z",
+      "updatedAt": "2026-05-07T04:21:24.218Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 최적화가 아니라 모바일환경에 맞는 레이아웃 변경ㅇ르 말하는거야. PC환경은 기존대로 하지만 모바일폰으로 접속할때 이 새로 마든 레리아웃으",
+      "description": "모바일 최적화가 아니라 모바일환경에 맞는 레이아웃 변경ㅇ르 말하는거야. PC환경은 기존대로 하지만 모바일폰으로 접속할때 이 새로 마든 레리아웃으로 모바일 최적화를 해줘.\n\n그리고 P를 누르면 본인만 정리되면 공격을 못할뿐 상대방의 공격에는 당하게 수정해줘.",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778127806343-cbsr",
+      "createdAt": "2026-05-07T04:23:26.343Z",
+      "updatedAt": "2026-05-07T04:23:26.343Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 최적화가 아니라 모바일환경에 맞는 레이아웃 변경ㅇ르 말하는거야. PC환경은 기존대로 하지만 모바일폰으로 접속할때 이 새로 마든 레리아웃으",
+      "description": "모바일 최적화가 아니라 모바일환경에 맞는 레이아웃 변경ㅇ르 말하는거야. PC환경은 기존대로 하지만 모바일폰으로 접속할때 이 새로 마든 레리아웃으로 모바일 최적화를 해줘.\n\n그리고 P를 누르면 본인만 정리되면 공격을 못할뿐 상대방의 공격에는 당하게 수정해줘.",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778128108213-4txu",
+      "createdAt": "2026-05-07T04:28:28.213Z",
+      "updatedAt": "2026-05-07T04:28:28.213Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 최적화가 아니라 모바일환경에 맞는 레이아웃 변경ㅇ르 말하는거야. PC환경은 기존대로 하지만 모바일폰으로 접속할때 이 새로 마든 레리아웃으",
+      "description": "모바일 최적화가 아니라 모바일환경에 맞는 레이아웃 변경ㅇ르 말하는거야. PC환경은 기존대로 하지만 모바일폰으로 접속할때 이 새로 마든 레리아웃으로 모바일 최적화를 해줘.\n\n그리고 P를 누르면 본인만 정리되면 공격을 못할뿐 상대방의 공격에는 당하게 수정해줘.",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778128148231-5sl1",
+      "createdAt": "2026-05-07T04:29:08.231Z",
+      "updatedAt": "2026-05-07T04:29:08.231Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 최적화가 아니라 모바일환경에 맞는 레이아웃 변경ㅇ르 말하는거야. PC환경은 기존대로 하지만 모바일폰으로 접속할때 이 새로 마든 레리아웃으",
+      "description": "모바일 최적화가 아니라 모바일환경에 맞는 레이아웃 변경ㅇ르 말하는거야. PC환경은 기존대로 하지만 모바일폰으로 접속할때 이 새로 마든 레리아웃으로 모바일 최적화를 해줘.\n\n그리고 P를 누르면 본인만 정리되면 공격을 못할뿐 상대방의 공격에는 당하게 수정해줘.",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778128361105-ud4q",
+      "createdAt": "2026-05-07T04:32:41.105Z",
+      "updatedAt": "2026-05-07T04:32:41.105Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 블루프린트 만들어줘",
+      "description": "블루프린트 만들어줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778128636407-5j2k",
+      "createdAt": "2026-05-07T04:37:16.407Z",
+      "updatedAt": "2026-05-07T04:37:16.407Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 블루프린트 만들어줘",
+      "description": "블루프린트 만들어줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778129414792-ff0a",
+      "createdAt": "2026-05-07T04:50:14.792Z",
+      "updatedAt": "2026-05-07T04:50:14.792Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 배포해줘",
+      "description": "배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778129767484-p4uk",
+      "createdAt": "2026-05-07T04:56:07.484Z",
+      "updatedAt": "2026-05-07T04:56:07.484Z"
     }
   ],
   "stageHistory": [

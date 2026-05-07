@@ -7,6 +7,8 @@ interface BoardProps {
   showNextPiece?: boolean;
   nextPieceColor?: string;
   attackAnimation?: number;
+  scale?: number;
+  compact?: boolean;
 }
 
 export function Board({ 
@@ -14,9 +16,10 @@ export function Board({
   currentPiece, 
   isOpponent = false,
   nextPieceColor,
-  attackAnimation
+  attackAnimation,
+  scale = 1,
+  compact = false,
 }: BoardProps) {
-  const scale = isOpponent ? 0.6 : 1;
   const cellSize = 30 * scale;
 
   // 현재 조각을 포함한 표시용 보드 생성

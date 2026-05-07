@@ -55,6 +55,24 @@ body {
   animation: attackFlash 0.5s ease-out;
 }
 
+/* ===== 모바일 반응형 글로벌 스타일 ===== */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #root {
+    min-height: 100dvh;
+  }
+
+  /* 모바일에서 버튼 터치 영역 확대 */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

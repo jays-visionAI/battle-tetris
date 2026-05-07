@@ -279,6 +279,7 @@ export class TetrisGame {
   }
 
   addAttackLines(count: number): void {
+    // paused 상태에서도 공격은 받음 (P키로 본인만 정지, 상대 공격은 수신)
     if (count <= 0) return;
 
     for (let i = 0; i < count; i++) {

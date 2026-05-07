@@ -10,20 +10,13 @@ node:events:491
 Error: listen EADDRINUSE: address already in use :::3001
     at __node_internal_captureLargerStackTrace (node:internal/errors:490:5)
     at __node_int[Server] 클라이언트 연결됨: XGAENSgg-wfCdYg6AAAE
-2)
-    at Server.setupListenHandle [as _listen2] (node:net:1740:16)
-    at listenInCluster (node:net:1788:12)
-    at Server.listen (node:net:1876:7)
-    at <anonymous> (/Users/sangjaeseo/BlueforgeProjects/배틀테트리스/server/index.ts:516:12)
-    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)
-Emitted 'error' event on Server instance at:
-    at emitErrorNT (node:net:1767:8)
-    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
-  code: 'EADDRINUSE',
-  errno: -48,
-  syscall: 'listen',
-  address: '::',
-  port: 3001
-}
-
-Node.js v18.16.0
+[Server] 클라이언트 연결됨: OsTt6iAzm5IaLs0xAAAH
+[Server] 클라이언트 연결 해제: Nwj_GJAttTM99n35AAAB
+[Server] 클라이언트 연결 해제: XGAENSgg-wfCdYg6AAAE
+[Server] 클라이언트 연결 해제: OsTt6iAzm5IaLs0xAAAH
+[Server] 클라이언트 연결됨: lwjGwNv6KBx_Qt6GAAAK
+[Server] 클라이언트 연결됨: Uh1b5Ik2MIEqZ8STAAAN
+[Server] 클라이언트 연결 해제: lwjGwNv6KBx_Qt6GAAAK
+[Server] 클라이언트 연결 해제: Uh1b5Ik2MIEqZ8STAAAN
+[Server] 클라이언트 연결됨: axxSETLp50dhysdTAAAQ
+[Server] 클라이언트 연결 해제: axxSETLp50dhysdTAAAQ
