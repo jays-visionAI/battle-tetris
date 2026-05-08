@@ -2,38 +2,8 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-07T04:56:07.588Z",
+  "lastUpdatedAt": "2026-05-08T07:43:25.807Z",
   "decisions": [
-    {
-      "type": "general",
-      "title": "User request: 재개해줘",
-      "description": "재개해줘",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777582591950-lmaf",
-      "createdAt": "2026-04-30T20:56:31.950Z",
-      "updatedAt": "2026-04-30T21:02:08.158Z"
-    },
-    {
-      "type": "feature",
-      "title": "deepseek-v4-pro: 재개해줘",
-      "description": "재개하겠습니다. 먼저 현재 파일 상태를 확인하고 원격 접속이 가능하도록 핵심 수정 작업을 진행하겠습니다.\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"server/index.ts\"}</parameter>\n</invoke>\n\n<invoke name=\"file_read\">\n<parameter",
-      "status": "completed",
-      "source": "agent",
-      "relatedFiles": [
-        "server/index.ts",
-        "src/client/components/Lobby.tsx",
-        "src/client/components/Game.tsx",
-        "src/client/App.tsx"
-      ],
-      "tags": [
-        "deepseek-v4-pro",
-        "code_implementation"
-      ],
-      "id": "d-1777582927954-rn2w",
-      "createdAt": "2026-04-30T21:02:07.954Z",
-      "updatedAt": "2026-04-30T23:03:47.503Z"
-    },
     {
       "type": "general",
       "title": "User request: Continue from where you left off. Complete any remaining work.",
@@ -3473,6 +3443,26 @@
       "id": "d-1778129767484-p4uk",
       "createdAt": "2026-05-07T04:56:07.484Z",
       "updatedAt": "2026-05-07T04:56:07.484Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 버전 UI/UX 변경에 대해 작업결과 알려줘",
+      "description": "모바일 버전 UI/UX 변경에 대해 작업결과 알려줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778224867990-cm5j",
+      "createdAt": "2026-05-08T07:21:07.990Z",
+      "updatedAt": "2026-05-08T07:21:07.990Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 배포해줘",
+      "description": "배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778226203803-mtv3",
+      "createdAt": "2026-05-08T07:43:23.803Z",
+      "updatedAt": "2026-05-08T07:43:23.803Z"
     }
   ],
   "stageHistory": [
