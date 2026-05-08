@@ -2,46 +2,8 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-08T07:43:25.807Z",
+  "lastUpdatedAt": "2026-05-08T08:03:19.639Z",
   "decisions": [
-    {
-      "type": "general",
-      "title": "User request: Continue from where you left off. Complete any remaining work.",
-      "description": "Continue from where you left off. Complete any remaining work.",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777582933936-0309",
-      "createdAt": "2026-04-30T21:02:13.936Z",
-      "updatedAt": "2026-04-30T21:06:06.112Z"
-    },
-    {
-      "type": "feature",
-      "title": "deepseek-v4-pro: Continue from where you left off. Complete any remaining work.",
-      "description": "Let me first check the current state of the key files to understand what has been done and what remains.\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"server/index.ts\"}</parameter>\n<",
-      "status": "completed",
-      "source": "agent",
-      "relatedFiles": [
-        "server/index.ts",
-        "src/client/components/Lobby.tsx",
-        "src/client/components/Game.tsx",
-        "src/client/App.tsx",
-        "src/client/components/Board.tsx",
-        "src/client/game/TetrisGame.ts",
-        "package.json",
-        "vite.config.ts",
-        "DEPLOY.md",
-        "implementation_report.md",
-        "tsconfig.json",
-        "server.log"
-      ],
-      "tags": [
-        "deepseek-v4-pro",
-        "code_implementation"
-      ],
-      "id": "d-1777583165908-3s9d",
-      "createdAt": "2026-04-30T21:06:05.908Z",
-      "updatedAt": "2026-04-30T23:08:01.330Z"
-    },
     {
       "type": "general",
       "title": "User request: Continue from where you left off. Complete any remaining work.",
@@ -3463,6 +3425,26 @@
       "id": "d-1778226203803-mtv3",
       "createdAt": "2026-05-08T07:43:23.803Z",
       "updatedAt": "2026-05-08T07:43:23.803Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일에서 이렇게 보이면 플레이 할 수 없지. 화면이 스크롤되지않고 고정되어야 하고 상대편 화면도 보여야 하니 상대푠이 작게 보여야 하는거고. ",
+      "description": "모바일에서 이렇게 보이면 플레이 할 수 없지. 화면이 스크롤되지않고 고정되어야 하고 상대편 화면도 보여야 하니 상대푠이 작게 보여야 하는거고. 기획안대로 개발이 안된원인을 파악해서 수정해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778226982104-gy0g",
+      "createdAt": "2026-05-08T07:56:22.104Z",
+      "updatedAt": "2026-05-08T07:56:22.104Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 다시해줘",
+      "description": "다시해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778227397637-dqqn",
+      "createdAt": "2026-05-08T08:03:17.637Z",
+      "updatedAt": "2026-05-08T08:03:17.637Z"
     }
   ],
   "stageHistory": [

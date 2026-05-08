@@ -592,6 +592,9 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
           .game-container {
             padding: 8px !important;
             min-height: 100dvh;
+            height: 100dvh;
+            overflow: hidden;
+            position: relative;
           }
 
           .game-header {
