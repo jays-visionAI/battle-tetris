@@ -2,49 +2,8 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-08T11:41:52.319Z",
+  "lastUpdatedAt": "2026-05-08T11:59:45.743Z",
   "decisions": [
-    {
-      "type": "general",
-      "title": "User request: Continue from where you left off. Complete any remaining work.",
-      "description": "Continue from where you left off. Complete any remaining work.",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777587348513-xj6n",
-      "createdAt": "2026-04-30T22:15:48.513Z",
-      "updatedAt": "2026-05-01T00:17:29.007Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 내가 해야 할게 있어?",
-      "description": "내가 해야 할게 있어?",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777587440713-11ko",
-      "createdAt": "2026-04-30T22:17:20.713Z",
-      "updatedAt": "2026-04-30T22:19:44.262Z"
-    },
-    {
-      "type": "feature",
-      "title": "gemini-2.5-pro: 내가 해야 할게 있어?",
-      "description": "c` doesn't compile it (tsconfig has `noEmit: true`). There's no `server/index.js` file.\n2. **`npm run build` only builds the client**: `\"build\": \"tsc && vite build\"` — the `tsc` here is just type-chec",
-      "status": "completed",
-      "source": "agent",
-      "relatedFiles": [
-        "server/index.ts",
-        "package.json",
-        "vite.config.ts",
-        "src/client/components/Lobby.tsx",
-        "src/client/components/Game.tsx"
-      ],
-      "tags": [
-        "gemini-2.5-pro",
-        "code_implementation"
-      ],
-      "id": "d-1777587584096-4iv8",
-      "createdAt": "2026-04-30T22:19:44.096Z",
-      "updatedAt": "2026-05-01T00:23:15.865Z"
-    },
     {
       "type": "general",
       "title": "User request: Continue from where you left off. Complete any remaining work.",
@@ -3362,6 +3321,36 @@
       "id": "d-1778240510316-kkad",
       "createdAt": "2026-05-08T11:41:50.316Z",
       "updatedAt": "2026-05-08T11:41:50.316Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 버전에서 키패드 터치가 오작동함. 소스 점검 해줘 그리고 터치패드가 팰리화면을 침첨하고 있어.. 모바일 화면에서는 상대플레어 화면을 볼공",
+      "description": "모바일 버전에서 키패드 터치가 오작동함. 소스 점검 해줘 그리고 터치패드가 팰리화면을 침첨하고 있어.. 모바일 화면에서는 상대플레어 화면을 볼공간이 부족해서 이전 화면배치를 논의했지만 전혀 수정되지 않았어...",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778240836356-tr00",
+      "createdAt": "2026-05-08T11:47:16.356Z",
+      "updatedAt": "2026-05-08T11:47:16.356Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: Q1. 모바일 레이아웃 우선순위\n현재 구현:\n\n내 보드 좌측, 상대방 보드 우측 상단 fixed (scale 0.45)\n대안: 상대방 보드는 현",
+      "description": "Q1. 모바일 레이아웃 우선순위\n현재 구현:\n\n내 보드 좌측, 상대방 보드 우측 상단 fixed (scale 0.45)\n대안: 상대방 보드는 현황 파악만 하면 되니까 작아도 무방함.\n\nA안: 가로 스크롤 허용, 보드 나란히 배치\nB안: 상대방 보드 최소화, 내 보드 크게\nC안: 탭으로 전환 (내 보드 / 상대방 보드)\n어떤 방식을 선호하세요?\n\nB안인거 너가 만든 문서대로 ..\n\nQ2. 터치 컨트롤 위치\n현재: 화면 하단 중앙 고정\n\n\n화면 하단 고정 지금보다 20% 작게.\n\n대안:\n\nC안: 하단 왼쪽 (조작), 하단 오른쪽 (하드",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778241251856-eqxu",
+      "createdAt": "2026-05-08T11:54:11.856Z",
+      "updatedAt": "2026-05-08T11:54:11.856Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 배포해줘",
+      "description": "배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778241583739-kg1y",
+      "createdAt": "2026-05-08T11:59:43.739Z",
+      "updatedAt": "2026-05-08T11:59:43.739Z"
     }
   ],
   "stageHistory": [

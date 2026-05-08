@@ -452,7 +452,8 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
   };
 
   // ========== 터치 컨트롤 핸들러 ==========
-  const handleTouchAction = useCallback((action: string) => {
+  const handleTouchAction = useCallback((e: React.TouchEvent, action: string) => {
+    e.preventDefault(); // 브라우저 기본 동작 방지 (스크롤, 줌 등)
     const g = getGame();
     if (!g || g.isGameOver()) return;
 
@@ -612,7 +613,7 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
         </div>
         )}
 
-        {/* 상대방 보드 - 우측 상단 오버레이 */}
+        {/* 상대방 보드 - 우측 상단 오버레이 (B안: 최소화) */}
         {isMobile && (
           <div style={styles.opponentOverlay} className="opponent-overlay">
             <div style={styles.opponentHeader} className="opponent-header">
@@ -620,7 +621,7 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
               <span style={styles.opponentScore}>{opponentState.score}점</span>
             </div>
             <div style={{
-              transform: 'scale(0.45)',
+              transform: 'scale(0.4)',
               transformOrigin: 'top left',
               width: `${BOARD_WIDTH * 25}px`,
               height: `${BOARD_HEIGHT * 25}px`,
@@ -665,59 +666,57 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
         </div>
       )}
 
-      {/* 모바일 터치 컨트롤 */}
+      {/* 모바일 터치 컨트롤 - C안: 왼쪽(조작), 오른쪽(하드드롭/일시정지) */}
       {isMobile && (
         <div style={styles.touchControls} className="touch-controls">
-          {/* 좌우 회전 행 */}
-          <div style={styles.touchRow} className="touch-row">
-            <button 
-              style={styles.touchButton} 
-              className="touch-button touch-left"
-              onTouchStart={() => handleTouchAction('left')}
-              onClick={() => handleTouchAction('left')}
-            >
-              ◀
-            </button>
-            <button 
-              style={styles.touchButton} 
-              className="touch-button touch-rotate"
-              onTouchStart={() => handleTouchAction('rotate')}
-              onClick={() => handleTouchAction('rotate')}
-            >
-              ▲
-            </button>
-            <button 
-              style={styles.touchButton} 
-              className="touch-button touch-right"
-              onTouchStart={() => handleTouchAction('right')}
-              onClick={() => handleTouchAction('right')}
-            >
-              ▶
-            </button>
+          {/* 왼쪽: 방향 조작 (←▲▶▼) */}
+          <div style={styles.touchLeftGroup} className="touch-left-group">
+            <div style={styles.touchRow} className="touch-row">
+              <button 
+                style={styles.touchButton} 
+                className="touch-button touch-left"
+                onTouchStart={(e) => handleTouchAction(e, 'left')}
+              >
+                ◀
+              </button>
+              <button 
+                style={styles.touchButton} 
+                className="touch-button touch-rotate"
+                onTouchStart={(e) => handleTouchAction(e, 'rotate')}
+              >
+                ▲
+              </button>
+              <button 
+                style={styles.touchButton} 
+                className="touch-button touch-right"
+                onTouchStart={(e) => handleTouchAction(e, 'right')}
+              >
+                ▶
+              </button>
+            </div>
+            <div style={styles.touchRow} className="touch-row">
+              <button 
+                style={{...styles.touchButton, width: '100%'}}
+                className="touch-button touch-down"
+                onTouchStart={(e) => handleTouchAction(e, 'down')}
+              >
+                ▼
+              </button>
+            </div>
           </div>
-          {/* 아래 & 하드드롭 행 */}
-          <div style={styles.touchRow} className="touch-row">
+          {/* 오른쪽: 하드드롭 + 일시정지 */}
+          <div style={styles.touchRightGroup} className="touch-right-group">
             <button 
-              style={styles.touchButton} 
-              className="touch-button touch-down"
-              onTouchStart={() => handleTouchAction('down')}
-              onClick={() => handleTouchAction('down')}
-            >
-              ▼
-            </button>
-            <button 
-              style={styles.touchButton} 
+              style={{...styles.touchButton, height: 'auto', flex: 1, fontSize: 18}}
               className="touch-button touch-hard-drop"
-              onTouchStart={() => handleTouchAction('hardDrop')}
-              onClick={() => handleTouchAction('hardDrop')}
+              onTouchStart={(e) => handleTouchAction(e, 'hardDrop')}
             >
               ▼▼
             </button>
             <button 
-              style={styles.touchButton} 
+              style={{...styles.touchButton, height: 'auto', flex: 1, fontSize: 16}}
               className="touch-button touch-pause"
-              onTouchStart={() => handleTouchAction('pause')}
-              onClick={() => handleTouchAction('pause')}
+              onTouchStart={(e) => handleTouchAction(e, 'pause')}
             >
               ⏸
             </button>
@@ -1283,27 +1282,41 @@ const styles: Record<string, React.CSSProperties> = {
   },
   touchControls: {
     position: 'fixed' as const,
-    bottom: 80,
-    left: '50%',
-    transform: 'translateX(-50%)',
+    bottom: 16,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '0 12px',
+    zIndex: 100,
+    pointerEvents: 'none' as const,
+  },
+  touchLeftGroup: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 8,
-    zIndex: 100,
+    gap: 6,
+    pointerEvents: 'auto' as const,
+  },
+  touchRightGroup: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: 6,
+    width: 52,
+    pointerEvents: 'auto' as const,
   },
   touchRow: {
     display: 'flex',
-    gap: 10,
+    gap: 6,
     justifyContent: 'center',
   },
   touchButton: {
-    width: 55,
-    height: 55,
-    borderRadius: 12,
-    border: '3px solid rgba(0, 255, 255, 0.6)',
-    backgroundColor: 'rgba(0, 255, 255, 0.15)',
+    width: 46,
+    height: 46,
+    borderRadius: 10,
+    border: '2px solid rgba(0, 255, 255, 0.5)',
+    backgroundColor: 'rgba(0, 255, 255, 0.12)',
     color: '#00ffff',
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     display: 'flex',
     alignItems: 'center',
@@ -1311,7 +1324,7 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     userSelect: 'none' as const,
     WebkitTapHighlightColor: 'transparent',
-    touchAction: 'manipulation',
+    touchAction: 'none',
   },
 };
 
