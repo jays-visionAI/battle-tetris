@@ -2,76 +2,8 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-08T08:48:32.323Z",
+  "lastUpdatedAt": "2026-05-08T09:06:23.752Z",
   "decisions": [
-    {
-      "type": "general",
-      "title": "User request: 원격서버를 실제로 구축하고 웹소켓을 연결하고 싶은데 가능할까?",
-      "description": "원격서버를 실제로 구축하고 웹소켓을 연결하고 싶은데 가능할까?",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777583789908-bm4j",
-      "createdAt": "2026-04-30T21:16:29.908Z",
-      "updatedAt": "2026-04-30T23:17:27.087Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 이전 작업 계속해줘",
-      "description": "이전 작업 계속해줘",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777583800808-f9ym",
-      "createdAt": "2026-04-30T21:16:40.808Z",
-      "updatedAt": "2026-04-30T21:19:21.868Z"
-    },
-    {
-      "type": "feature",
-      "title": "deepseek-v4-pro: 이전 작업 계속해줘",
-      "description": "먼저 현재 프로젝트의 핵심 파일 상태를 확인하겠습니다. 이전에 여러 차례 시도가 있었으니, 실제로 어떤 코드가 수정되었는지 파악하는 것이 중요합니다.\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"server/index.ts\"}</parameter>\n</invoke>\n\n<invoke nam",
-      "status": "completed",
-      "source": "agent",
-      "relatedFiles": [
-        "server/index.ts",
-        "src/client/components/Lobby.tsx",
-        "src/client/components/Game.tsx",
-        "src/client/App.tsx",
-        "src/client/components/Board.tsx",
-        "src/client/game/TetrisGame.ts",
-        "package.json",
-        "vite.config.ts",
-        "tsconfig.json",
-        "DEPLOY.md",
-        "src/client/index.css",
-        "implementation_report.md"
-      ],
-      "tags": [
-        "deepseek-v4-pro",
-        "code_implementation"
-      ],
-      "id": "d-1777583961648-txe2",
-      "createdAt": "2026-04-30T21:19:21.648Z",
-      "updatedAt": "2026-04-30T23:28:54.298Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 원격서버를 실제로 구축하고 웹소켓을 연결하고 싶은데 가능할까?",
-      "description": "원격서버를 실제로 구축하고 웹소켓을 연결하고 싶은데 가능할까?",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777583964080-gaqx",
-      "createdAt": "2026-04-30T21:19:24.080Z",
-      "updatedAt": "2026-04-30T23:28:54.298Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 계속해줘",
-      "description": "계속해줘",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777584326920-hvf4",
-      "createdAt": "2026-04-30T21:25:26.920Z",
-      "updatedAt": "2026-04-30T23:28:54.298Z"
-    },
     {
       "type": "general",
       "title": "User request: 계속해줘",
@@ -3427,6 +3359,56 @@
       "id": "d-1778230110320-dh2u",
       "createdAt": "2026-05-08T08:48:30.320Z",
       "updatedAt": "2026-05-08T08:48:30.320Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 배포해줘",
+      "description": "배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778230495462-hejj",
+      "createdAt": "2026-05-08T08:54:55.462Z",
+      "updatedAt": "2026-05-08T08:54:55.462Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 모바일 환경에서 블록을 이동하고 회전시키는게 안됨.. \n\n화면에 우측상단에 상대방의 플레이 화면이 작게 보여야 하는데 그게 안보임.. 우리가 레",
+      "description": "모바일 환경에서 블록을 이동하고 회전시키는게 안됨.. \n\n화면에 우측상단에 상대방의 플레이 화면이 작게 보여야 하는데 그게 안보임.. 우리가 레이아웃관련 기획하고 작업한 내용을 다시 확인해봐",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778230687881-9bil",
+      "createdAt": "2026-05-08T08:58:07.881Z",
+      "updatedAt": "2026-05-08T08:58:07.881Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 구현해줘..",
+      "description": "구현해줘..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778230968310-rbxg",
+      "createdAt": "2026-05-08T09:02:48.310Z",
+      "updatedAt": "2026-05-08T09:02:48.310Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 구현하는데 게임답게 화면이 위아래로 스크롤이 되면 안돼. 모바일 환경에서 화면 스크롤되지 않고 화면안에 모두 보이도록하고 불필요한건 안보여줘도 ",
+      "description": "구현하는데 게임답게 화면이 위아래로 스크롤이 되면 안돼. 모바일 환경에서 화면 스크롤되지 않고 화면안에 모두 보이도록하고 불필요한건 안보여줘도 돼.. \n\n그리고 로그인 기능 추가해줘. 유저별로 전적관리를 해줘. 몇전 몇승 몇패.. 승률\n\n그리고 리더보드 만들어줘. 리더보드 페이지에 랭킹을 보여줘야해.\n\n이 내용을 포함해서 구현계획을 수립하고 상기 계획에 추가해서 진행해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778231100692-vj0t",
+      "createdAt": "2026-05-08T09:05:00.692Z",
+      "updatedAt": "2026-05-08T09:05:00.692Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 구현하는데 게임답게 화면이 위아래로 스크롤이 되면 안돼. 모바일 환경에서 화면 스크롤되지 않고 화면안에 모두 보이도록하고 불필요한건 안보여줘도 ",
+      "description": "구현하는데 게임답게 화면이 위아래로 스크롤이 되면 안돼. 모바일 환경에서 화면 스크롤되지 않고 화면안에 모두 보이도록하고 불필요한건 안보여줘도 돼.. \n\n그리고 로그인 기능 추가해줘. 유저별로 전적관리를 해줘. 몇전 몇승 몇패.. 승률\n\n그리고 리더보드 만들어줘. 리더보드 페이지에 랭킹을 보여줘야해.\n\n이 내용을 포함해서 구현계획을 수립하고 상기 계획에 추가해서 진행해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778231181752-2nw2",
+      "createdAt": "2026-05-08T09:06:21.752Z",
+      "updatedAt": "2026-05-08T09:06:21.752Z"
     }
   ],
   "stageHistory": [

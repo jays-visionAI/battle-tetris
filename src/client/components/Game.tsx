@@ -414,6 +414,44 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
     }
   };
 
+  // ========== 터치 컨트롤 핸들러 ==========
+  const handleTouchAction = useCallback((action: string) => {
+    const g = getGame();
+    if (!g || g.isGameOver()) return;
+
+    switch (action) {
+      case 'left':
+        if (g.moveLeft()) {
+          sendGameplayAction('move_left');
+        }
+        break;
+      case 'right':
+        if (g.moveRight()) {
+          sendGameplayAction('move_right');
+        }
+        break;
+      case 'down':
+        if (g.moveDown()) {
+          sendGameplayAction('move_down');
+        }
+        break;
+      case 'rotate':
+        if (g.rotate()) {
+          sendGameplayAction('rotate');
+        }
+        break;
+      case 'hardDrop':
+        g.hardDrop();
+        sendGameplayAction('hard_drop');
+        break;
+      case 'pause':
+        g.togglePause();
+        sendGameplayAction('toggle_pause');
+        break;
+    }
+    setRenderTick(t => t + 1);
+  }, [getGame, sendGameplayAction]);
+
   const g = getGame();
   if (!g) {
     return (
@@ -549,14 +587,76 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
         </div>
       </div>
 
-      {/* 조작법 */}
-      <div style={styles.controls} className="controls-bar">
-        <span>← → 이동</span>
-        <span>↑ 회전</span>
-        <span>↓ 아래로 이동</span>
-        <span>Space 한 번에 내리기</span>
-        <span>P 일시 정지</span>
-      </div>
+      {/* 조작법 - PC만 표시 */}
+      {!isMobile && (
+        <div style={styles.controls} className="controls-bar">
+          <span>← → 이동</span>
+          <span>↑ 회전</span>
+          <span>↓ 아래로 이동</span>
+          <span>Space 한 번에 내리기</span>
+          <span>P 일시 정지</span>
+        </div>
+      )}
+
+      {/* 모바일 터치 컨트롤 */}
+      {isMobile && (
+        <div style={styles.touchControls} className="touch-controls">
+          {/* 좌우 회전 행 */}
+          <div style={styles.touchRow} className="touch-row">
+            <button 
+              style={styles.touchButton} 
+              className="touch-button touch-left"
+              onTouchStart={() => handleTouchAction('left')}
+              onClick={() => handleTouchAction('left')}
+            >
+              ◀
+            </button>
+            <button 
+              style={styles.touchButton} 
+              className="touch-button touch-rotate"
+              onTouchStart={() => handleTouchAction('rotate')}
+              onClick={() => handleTouchAction('rotate')}
+            >
+              ▲
+            </button>
+            <button 
+              style={styles.touchButton} 
+              className="touch-button touch-right"
+              onTouchStart={() => handleTouchAction('right')}
+              onClick={() => handleTouchAction('right')}
+            >
+              ▶
+            </button>
+          </div>
+          {/* 아래 & 하드드롭 행 */}
+          <div style={styles.touchRow} className="touch-row">
+            <button 
+              style={styles.touchButton} 
+              className="touch-button touch-down"
+              onTouchStart={() => handleTouchAction('down')}
+              onClick={() => handleTouchAction('down')}
+            >
+              ▼
+            </button>
+            <button 
+              style={styles.touchButton} 
+              className="touch-button touch-hard-drop"
+              onTouchStart={() => handleTouchAction('hardDrop')}
+              onClick={() => handleTouchAction('hardDrop')}
+            >
+              ▼▼
+            </button>
+            <button 
+              style={styles.touchButton} 
+              className="touch-button touch-pause"
+              onTouchStart={() => handleTouchAction('pause')}
+              onClick={() => handleTouchAction('pause')}
+            >
+              ⏸
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 게임 오버 오버레이 - 하단 고정 스타일 */}
       {gameOver && (
@@ -739,6 +839,49 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
           .quit-button-mobile {
             padding: 12px 30px !important;
             font-size: 16px !important;
+          }
+
+          /* ===== 모바일 터치 컨트롤 ===== */
+          .touch-controls {
+            position: fixed !important;
+            bottom: max(20px, env(safe-area-inset-bottom) + 10px) !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            padding: 8px !important;
+            backgroundColor: rgba(10, 10, 26, 0.9) !important;
+            borderRadius: 16px !important;
+            border: 2px solid rgba(0, 255, 255, 0.3) !important;
+          }
+
+          .touch-row {
+            display: flex !important;
+            gap: 10px !important;
+            justify-content: center !important;
+          }
+
+          .touch-button {
+            width: 58px !important;
+            height: 58px !important;
+            borderRadius: 14px !important;
+            border: 2px solid rgba(0, 255, 255, 0.6) !important;
+            backgroundColor: rgba(0, 255, 255, 0.15) !important;
+            color: #00ffff !important;
+            font-size: 22px !important;
+            fontWeight: bold !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            user-select: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+            touch-action: manipulation !important;
+          }
+
+          .touch-button:active {
+            backgroundColor: rgba(0, 255, 255, 0.4) !important;
+            transform: scale(0.95) !important;
           }
         }
 
@@ -1000,6 +1143,38 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     fontWeight: 'bold',
     transition: 'all 0.3s',
+  },
+  touchControls: {
+    position: 'fixed' as const,
+    bottom: 20,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: 10,
+    zIndex: 100,
+  },
+  touchRow: {
+    display: 'flex',
+    gap: 12,
+    justifyContent: 'center',
+  },
+  touchButton: {
+    width: 65,
+    height: 65,
+    borderRadius: 16,
+    border: '3px solid rgba(0, 255, 255, 0.6)',
+    backgroundColor: 'rgba(0, 255, 255, 0.15)',
+    color: '#00ffff',
+    fontSize: 26,
+    fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    userSelect: 'none' as const,
+    WebkitTapHighlightColor: 'transparent',
+    touchAction: 'manipulation',
   },
 };
 
