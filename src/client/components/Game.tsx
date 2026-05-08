@@ -558,20 +558,22 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
         <span>P 일시 정지</span>
       </div>
 
-      {/* 게임 오버 오버레이 */}
+      {/* 게임 오버 오버레이 - 하단 고정 스타일 */}
       {gameOver && (
         <div style={styles.gameOverOverlay}>
           <div style={styles.gameOverContent} className="game-over-content-mobile">
-            <h2 style={styles.gameOverTitle} className="game-over-title-mobile">
-              {winner === playerId ? '승리!' : '패배'}
-            </h2>
-            <p style={styles.finalScore} className="final-score-mobile">최종 점수: {state.score}</p>
+            <div style={styles.gameOverHeader}>
+              <h2 style={styles.gameOverTitle} className="game-over-title-mobile">
+                {winner && winner === playerId ? '승리!' : '패배'}
+              </h2>
+              <p style={styles.finalScore} className="final-score-mobile">최종 점수: {state.score}</p>
+            </div>
             <div style={styles.buttonGroup} className="button-group-mobile">
               <button style={styles.rematchButton} className="rematch-button-mobile" onClick={handleRematch}>
                 재경기
               </button>
               <button style={styles.quitButton} className="quit-button-mobile" onClick={handleQuit}>
-                로비로 돌아가기
+                로비로 돌아기기
               </button>
             </div>
           </div>
@@ -715,7 +717,8 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
           }
 
           .game-over-content-mobile {
-            padding: 30px 20px !important;
+            padding: 20px !important;
+            padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
           }
 
           .game-over-title-mobile {
@@ -941,20 +944,20 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#888',
   },
   gameOverOverlay: {
-    position: 'fixed',
-    top: 0,
+    position: 'absolute',
+    bottom: 0,
     left: 0,
     right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
+    padding: '20px',
+    paddingBottom: 'max(20px, env(safe-area-inset-bottom))',
     zIndex: 100,
   },
+  gameOverHeader: {
+    marginBottom: '16px',
+  },
   gameOverContent: {
-    textAlign: 'center',
-    padding: '50px',
+    textAlign: 'center' as const,
     backgroundColor: '#1a1a2e',
     borderRadius: '16px',
     border: '3px solid #00ffff',

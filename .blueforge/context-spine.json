@@ -2,66 +2,8 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-08T08:03:19.639Z",
+  "lastUpdatedAt": "2026-05-08T08:48:32.323Z",
   "decisions": [
-    {
-      "type": "general",
-      "title": "User request: Continue from where you left off. Complete any remaining work.",
-      "description": "Continue from where you left off. Complete any remaining work.",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777583168092-wk8k",
-      "createdAt": "2026-04-30T21:06:08.092Z",
-      "updatedAt": "2026-04-30T23:08:01.330Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: **Q1**: 아직 실제 코드 수정은 시작하지 않았습니다. 계속해서 구조 변경 코드를 작성하고 적용할까요, 아니면 다른 방향으로 진행할까요?I'",
-      "description": "**Q1**: 아직 실제 코드 수정은 시작하지 않았습니다. 계속해서 구조 변경 코드를 작성하고 적용할까요, 아니면 다른 방향으로 진행할까요?I'll now execute the implementation immediately. Here's the plan I'm executing:\n**A1**: 계속해줘",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777583248414-k27u",
-      "createdAt": "2026-04-30T21:07:28.414Z",
-      "updatedAt": "2026-04-30T21:09:28.687Z"
-    },
-    {
-      "type": "feature",
-      "title": "deepseek-v4-pro: **Q1**: 아직 실제 코드 수정은 시작하지 않았습니다. 계속해서 구조 변경 코드를 작성하고 적용할까요, 아니면 다른 방향으로 진행할까요?I'",
-      "description": "handleCreateRoom` and `handleJoinRoom` set fake `currentRoomId`/`playerId` state synchronously, causing immediate unmount before the server can respond\n4. **Game.tsx re-emits `join`** — causing duplic",
-      "status": "completed",
-      "source": "agent",
-      "relatedFiles": [
-        "server/index.ts",
-        "src/client/components/Lobby.tsx",
-        "src/client/components/Game.tsx",
-        "src/client/App.tsx",
-        "src/client/components/Board.tsx",
-        "src/client/game/TetrisGame.ts",
-        "package.json",
-        "DEPLOY.md",
-        "vite.config.ts",
-        "tsconfig.json",
-        "src/client/index.css",
-        "index.html"
-      ],
-      "tags": [
-        "deepseek-v4-pro",
-        "code_implementation"
-      ],
-      "id": "d-1777583368525-8ki3",
-      "createdAt": "2026-04-30T21:09:28.525Z",
-      "updatedAt": "2026-04-30T23:17:27.087Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 어디까지 개발된거야?",
-      "description": "어디까지 개발된거야?",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777583386141-q6sw",
-      "createdAt": "2026-04-30T21:09:46.141Z",
-      "updatedAt": "2026-04-30T23:17:27.087Z"
-    },
     {
       "type": "general",
       "title": "User request: 원격서버를 실제로 구축하고 웹소켓을 연결하고 싶은데 가능할까?",
@@ -3445,6 +3387,46 @@
       "id": "d-1778227397637-dqqn",
       "createdAt": "2026-05-08T08:03:17.637Z",
       "updatedAt": "2026-05-08T08:03:17.637Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 아이폰 15 pro에서 모바일 화면에서 화면 아래가 짤려 보임..  \n\n게임에 져도 승리로 보이는 문제가 있어 승자에게 승리. 패자에게 패배를 ",
+      "description": "아이폰 15 pro에서 모바일 화면에서 화면 아래가 짤려 보임..  \n\n게임에 져도 승리로 보이는 문제가 있어 승자에게 승리. 패자에게 패배를 보여줘야 함.",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778228890993-vwls",
+      "createdAt": "2026-05-08T08:28:10.993Z",
+      "updatedAt": "2026-05-08T08:28:10.993Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 아이폰 15 pro에서 모바일 화면에서 화면 아래가 짤려 보임..  \n\n게임에 져도 승리로 보이는 문제가 있어 승자에게 승리. 패자에게 패배를 ",
+      "description": "아이폰 15 pro에서 모바일 화면에서 화면 아래가 짤려 보임..  \n\n게임에 져도 승리로 보이는 문제가 있어 승자에게 승리. 패자에게 패배를 보여줘야 함.",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778229072493-v1g2",
+      "createdAt": "2026-05-08T08:31:12.493Z",
+      "updatedAt": "2026-05-08T08:31:12.493Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 플레이 버튼이 화면 하단에 있어야 해..",
+      "description": "플레이 버튼이 화면 하단에 있어야 해..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778229187515-rp33",
+      "createdAt": "2026-05-08T08:33:07.515Z",
+      "updatedAt": "2026-05-08T08:33:07.515Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 계속 해줘. 수정완료되었다면 배포해줘",
+      "description": "계속 해줘. 수정완료되었다면 배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778230110320-dh2u",
+      "createdAt": "2026-05-08T08:48:30.320Z",
+      "updatedAt": "2026-05-08T08:48:30.320Z"
     }
   ],
   "stageHistory": [
