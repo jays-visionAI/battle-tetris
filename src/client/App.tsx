@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import Lobby from './components/Lobby';
 import Game from './components/Game';
+import Leaderboard from './components/Leaderboard';
 import { soundManager } from './utils/SoundManager';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
   const [gameEndData, setGameEndData] = useState<{ winnerId: string; winnerName: string; loserId: string; loserName: string } | null>(null);
   const [replayRequest, setReplayRequest] = useState<{ fromPlayerId: string; fromPlayerName: string } | null>(null);
   const [soundInitialized, setSoundInitialized] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   
   const [playerName, setPlayerName] = useState(() => {
     return localStorage.getItem('battle-tetris-nickname') || '';
@@ -173,6 +175,15 @@ function App() {
     }
   }, []);
 
+  // 리더보드 페이지
+  if (showLeaderboard) {
+    return (
+      <Leaderboard
+        onBack={() => setShowLeaderboard(false)}
+      />
+    );
+  }
+
   // 게임 상태별 렌더링
   if (gameState === 'playing') {
     return (
@@ -203,6 +214,7 @@ function App() {
         onStartGame={handleStartGame}
         onReplayRequest={handleReplayRequest}
         onReplayAccept={handleReplayAccept}
+        onShowLeaderboard={() => setShowLeaderboard(true)}
       />
       
       {/* 카운트다운 오버레이 */}
@@ -252,7 +264,7 @@ function App() {
             🎉 {gameEndData.winnerName} 승리! 🎉
           </div>
           
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             <button 
               onClick={handleReplayRequest}
               style={{
@@ -267,6 +279,22 @@ function App() {
               }}
             >
               🔄 Replay
+            </button>
+            
+            <button 
+              onClick={() => setShowLeaderboard(true)}
+              style={{
+                padding: '1rem 2rem',
+                fontSize: '1.2rem',
+                backgroundColor: '#ffaa00',
+                color: '#000',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+              }}
+            >
+              🏆 리더보드
             </button>
             
             <button 

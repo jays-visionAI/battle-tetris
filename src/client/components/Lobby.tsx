@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Socket } from 'socket.io-client';
+import { statsManager } from '../utils/StatsManager';
 
 interface Player {
   id: string;
@@ -30,6 +31,7 @@ interface LobbyProps {
   onStartGame?: () => void;
   onReplayRequest?: () => void;
   onReplayAccept?: () => void;
+  onShowLeaderboard?: () => void;
 }
 
 function RoomListIcon() {
@@ -95,7 +97,8 @@ export default function Lobby({
   onLeaveRoom,
   onStartGame,
   onReplayRequest,
-  onReplayAccept
+  onReplayAccept,
+  onShowLeaderboard
 }: LobbyProps) {
   const [playerName, setPlayerName] = useState(initialPlayerName);
   const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
@@ -297,6 +300,37 @@ export default function Lobby({
         <h1 style={styles.title}>배틀 테트리스</h1>
         <p style={styles.subtitle}>실시간 1:1 테트리스 대결</p>
       </div>
+
+      {/* 내 전적 & 리더보드 버튼 */}
+      {playerName.trim() && (
+        <div style={styles.myStatsContainer}>
+          {(() => {
+            const myStats = statsManager.getStats(playerName.trim());
+            const winRate = statsManager.getWinRate(playerName.trim());
+            return (
+              <>
+                <div style={styles.myStatsRow}>
+                  <span style={styles.myStatsLabel}>내 전적</span>
+                  <span style={styles.myStatsWins}>{myStats.wins}승</span>
+                  <span style={styles.myStatsLosses}>{myStats.losses}패</span>
+                  <span style={{
+                    ...styles.myStatsRate,
+                    color: winRate >= 50 ? '#00ff00' : '#ffaa00',
+                  }}>
+                    승률 {winRate}%
+                  </span>
+                </div>
+                <button
+                  style={styles.leaderboardButton}
+                  onClick={onShowLeaderboard}
+                >
+                  🏆 리더보드
+                </button>
+              </>
+            );
+          })()}
+        </div>
+      )}
 
       <div style={styles.statusBar}>
         <div style={{

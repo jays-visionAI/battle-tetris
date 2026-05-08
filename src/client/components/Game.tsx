@@ -4,6 +4,7 @@ import Board from './Board';
 import { Socket } from 'socket.io-client';
 import { BOARD_HEIGHT, BOARD_WIDTH } from '../game/constants';
 import { soundManager } from '../utils/SoundManager';
+import { statsManager } from '../utils/StatsManager';
 
 interface Player {
   id: string;
@@ -44,6 +45,7 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
   const [opponentName, setOpponentName] = useState<string>('');
   const [opponentAttackAnimation, setOpponentAttackAnimation] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [gameStarted, setGameStarted] = useState(false);
   const gameRef = useRef<TetrisGame | null>(null);
   const animationRef = useRef<number>(0);
   const gameInitializedRef = useRef(false);
@@ -59,6 +61,36 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // 게임 시작 시 스크롤 방지
+  useEffect(() => {
+    const handleGameStart = () => {
+      setGameStarted(true);
+      // 스크롤 방지
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    };
+
+    const handleGameEnd = () => {
+      setGameStarted(false);
+      // 스크롤 허용
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+
+    socket?.on('game_start', handleGameStart);
+    socket?.on('game_end', handleGameEnd);
+    socket?.on('rematch_start', handleGameStart);
+
+    return () => {
+      socket?.off('game_start', handleGameStart);
+      socket?.off('game_end', handleGameEnd);
+      socket?.off('rematch_start', handleGameStart);
+      // 컴포넌트 언마운트 시 스크롤 허용
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (players && players.length > 0) {
@@ -172,6 +204,11 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
       const data = event.data as { winnerId: string; loserId: string };
       const winnerPlayer = players?.find(p => p.id === data.winnerId);
       const loserPlayer = players?.find(p => p.id === data.loserId);
+      
+      // 전적 기록 (localStorage)
+      if (winnerPlayer?.name && loserPlayer?.name) {
+        statsManager.recordGame(winnerPlayer.name, loserPlayer.name);
+      }
       
       socket?.emit('game_over', {
         winnerId: data.winnerId,
@@ -502,7 +539,8 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
           )}
         </div>
 
-        {/* 사이드 패널 */}
+        {/* 사이드 패널 - PC만 표시 */}
+        {!isMobile && (
         <div style={styles.sidePanel} className="side-panel">
           <div style={styles.nextPieceContainer} className="next-piece-container">
             <h4 style={styles.nextTitle} className="next-title">다음 블록</h4>
@@ -572,19 +610,48 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
             </div>
           </div>
         </div>
+        )}
 
-        {/* 상대방 보드 */}
-        <div style={styles.boardContainer} className="board-container-opponent">
-          <h3 style={styles.boardTitle} className="board-title">{opponentName || '상대방'}</h3>
-          <Board 
-            board={opponentState.board} 
-            currentPiece={opponentState.currentPiece}
-            nextPieceColor={opponentState.nextPiece?.color}
-            isOpponent={true}
-            attackAnimation={opponentAttackAnimation}
-            scale={isMobile ? 0.55 : 1}
-          />
-        </div>
+        {/* 상대방 보드 - 우측 상단 오버레이 */}
+        {isMobile && (
+          <div style={styles.opponentOverlay} className="opponent-overlay">
+            <div style={styles.opponentHeader} className="opponent-header">
+              <span style={styles.opponentLabel}>{opponentName || '상대방'}</span>
+              <span style={styles.opponentScore}>{opponentState.score}점</span>
+            </div>
+            <div style={{
+              transform: 'scale(0.45)',
+              transformOrigin: 'top left',
+              width: `${BOARD_WIDTH * 25}px`,
+              height: `${BOARD_HEIGHT * 25}px`,
+              pointerEvents: 'none',
+            }}>
+              <Board 
+                board={opponentState.board} 
+                currentPiece={opponentState.currentPiece}
+                nextPieceColor={opponentState.nextPiece?.color}
+                isOpponent={true}
+                attackAnimation={opponentAttackAnimation}
+                scale={1}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* PC용 상대방 보드 */}
+        {!isMobile && (
+          <div style={styles.boardContainer} className="board-container-opponent">
+            <h3 style={styles.boardTitle} className="board-title">{opponentName || '상대방'}</h3>
+            <Board 
+              board={opponentState.board} 
+              currentPiece={opponentState.currentPiece}
+              nextPieceColor={opponentState.nextPiece?.color}
+              isOpponent={true}
+              attackAnimation={opponentAttackAnimation}
+              scale={1}
+            />
+          </div>
+        )}
       </div>
 
       {/* 조작법 - PC만 표시 */}
@@ -673,7 +740,7 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
                 재경기
               </button>
               <button style={styles.quitButton} className="quit-button-mobile" onClick={handleQuit}>
-                로비로 돌아기기
+                로비로 돌아가기
               </button>
             </div>
           </div>
@@ -799,6 +866,36 @@ export function Game({ socket, roomId, players, onLeaveRoom }: GameProps) {
             font-size: 12px !important;
             margin-bottom: 4px !important;
             color: #ff4444 !important;
+          }
+
+          /* ===== 상대방 오버레이 (우측 상단) ===== */
+          .opponent-overlay {
+            position: fixed !important;
+            top: 8px !important;
+            right: 8px !important;
+            z-index: 1000 !important;
+            padding: 4px !important;
+            border-width: 1px !important;
+            transform: scale(0.9) !important;
+          }
+
+          .opponent-overlay .opponent-header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            margin-bottom: 2px !important;
+            padding: 0 2px !important;
+          }
+
+          .opponent-overlay .opponent-label {
+            font-size: 9px !important;
+            font-weight: bold !important;
+            color: #ff4444 !important;
+          }
+
+          .opponent-overlay .opponent-score {
+            font-size: 9px !important;
+            color: #aaa !important;
           }
 
           .controls-bar {
@@ -991,6 +1088,46 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#ffff00',
     textShadow: '0 0 20px rgba(255, 255, 0, 0.5)',
   },
+  opponentOverlay: {
+    position: 'fixed',
+    top: '10px',
+    right: '10px',
+    zIndex: 100,
+    backgroundColor: 'rgba(10, 10, 26, 0.95)',
+    border: '2px solid #00ffff',
+    borderRadius: '8px',
+    padding: '4px',
+    boxShadow: '0 0 15px rgba(0, 255, 255, 0.4)',
+  },
+  opponentHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '2px',
+    padding: '0 4px',
+  },
+  opponentLabel: {
+    fontSize: '10px',
+    fontWeight: 'bold',
+    color: '#ff4444',
+  },
+  opponentScore: {
+    fontSize: '10px',
+    color: '#aaa',
+  },
+  opponentOverlayTitle: {
+    fontSize: '12px',
+    color: '#ff6b6b',
+    textAlign: 'center',
+    marginBottom: '4px',
+  },
+  opponentStats: {
+    display: 'flex',
+    gap: '10px',
+    justifyContent: 'center',
+    fontSize: '11px',
+    color: '#aaa',
+  },
   stat: {
     fontSize: '14px',
     color: '#aaa',
@@ -1146,27 +1283,27 @@ const styles: Record<string, React.CSSProperties> = {
   },
   touchControls: {
     position: 'fixed' as const,
-    bottom: 20,
+    bottom: 80,
     left: '50%',
     transform: 'translateX(-50%)',
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 10,
+    gap: 8,
     zIndex: 100,
   },
   touchRow: {
     display: 'flex',
-    gap: 12,
+    gap: 10,
     justifyContent: 'center',
   },
   touchButton: {
-    width: 65,
-    height: 65,
-    borderRadius: 16,
+    width: 55,
+    height: 55,
+    borderRadius: 12,
     border: '3px solid rgba(0, 255, 255, 0.6)',
     backgroundColor: 'rgba(0, 255, 255, 0.15)',
     color: '#00ffff',
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: 'bold',
     display: 'flex',
     alignItems: 'center',

@@ -2,175 +2,8 @@
   "version": 1,
   "projectId": "",
   "createdAt": "2026-04-30T20:14:09.623Z",
-  "lastUpdatedAt": "2026-05-08T09:06:23.752Z",
+  "lastUpdatedAt": "2026-05-08T11:41:52.319Z",
   "decisions": [
-    {
-      "type": "general",
-      "title": "User request: 계속해줘",
-      "description": "계속해줘",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777584421939-jtuu",
-      "createdAt": "2026-04-30T21:27:01.939Z",
-      "updatedAt": "2026-04-30T23:28:54.298Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 어떤 답을 기다린다는거야?",
-      "description": "어떤 답을 기다린다는거야?",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777584688783-cj4y",
-      "createdAt": "2026-04-30T21:31:28.783Z",
-      "updatedAt": "2026-04-30T23:32:27.533Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 질문 다시해줘",
-      "description": "질문 다시해줘",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777584789861-01w8",
-      "createdAt": "2026-04-30T21:33:09.861Z",
-      "updatedAt": "2026-04-30T23:39:08.988Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: **Q1**: **배저 읽어서 전포 방식체 코드베이스를 파**: Render.com 같은 클라우드 서비스를악한 후 리뷰를 진행하겠습니다. 사용할",
-      "description": "**Q1**: **배저 읽어서 전포 방식체 코드베이스를 파**: Render.com 같은 클라우드 서비스를악한 후 리뷰를 진행하겠습니다. 사용할지, 아니면 사용자님의 개인 서버에 직접 배포할지?\n**A1**: 내가 가진 서버를 네가 직접 접속해서 서버를 구축할래?\n\n**Q2**: **서버 실행 방식**: `tsx`로 TypeScript를 직접 실행할지, 아니면 JavaScript로 컴파일 후 실행할지?\n**A2**: 어떤게 나은지 난 잘 모르겠어.\n\n**Q3**: **환경변수 설정**: `SERVER_URL`을 환경변수로 관리할지,",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777584991813-6y93",
-      "createdAt": "2026-04-30T21:36:31.813Z",
-      "updatedAt": "2026-04-30T23:39:08.988Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 서버구축은 어떻게해??",
-      "description": "서버구축은 어떻게해??",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777585977069-6suc",
-      "createdAt": "2026-04-30T21:52:57.069Z",
-      "updatedAt": "2026-04-30T21:55:10.378Z"
-    },
-    {
-      "type": "feature",
-      "title": "gemini-2.5-pro: 서버구축은 어떻게해??",
-      "description": "I'll first read the current state of the key files to understand what needs to be fixed before deployment.\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"server/index.ts\"}</parameter>",
-      "status": "completed",
-      "source": "agent",
-      "relatedFiles": [
-        "server/index.ts",
-        "src/client/components/Lobby.tsx",
-        "src/client/components/Game.tsx",
-        "src/client/components/Board.tsx",
-        "src/client/game/TetrisGame.ts",
-        "vite.config.ts",
-        ".env.example",
-        "tsconfig.node.json",
-        "deploy.sh",
-        "DEPLOY.md",
-        "README.md",
-        "server.log"
-      ],
-      "tags": [
-        "gemini-2.5-pro",
-        "code_implementation"
-      ],
-      "id": "d-1777586110238-jcxw",
-      "createdAt": "2026-04-30T21:55:10.238Z",
-      "updatedAt": "2026-05-01T00:05:06.326Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 내가 가진 Hetzner 서버에 올릴까? 아님 Render.com ?? 이거로 할까? 이게 무료서비스 가능한가?",
-      "description": "내가 가진 Hetzner 서버에 올릴까? 아님 Render.com ?? 이거로 할까? 이게 무료서비스 가능한가?",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777586763042-1daa",
-      "createdAt": "2026-04-30T22:06:03.042Z",
-      "updatedAt": "2026-05-01T00:11:50.266Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 테트리스는 15분 이상 플레이할일이 거의 없으니 Render.com으로 하자",
-      "description": "테트리스는 15분 이상 플레이할일이 거의 없으니 Render.com으로 하자",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777587136181-u5u0",
-      "createdAt": "2026-04-30T22:12:16.181Z",
-      "updatedAt": "2026-05-01T00:17:29.007Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: 뭘한건지 보고해줘",
-      "description": "뭘한건지 보고해줘",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777587222453-u06s",
-      "createdAt": "2026-04-30T22:13:42.453Z",
-      "updatedAt": "2026-04-30T22:14:53.085Z"
-    },
-    {
-      "type": "feature",
-      "title": "gemini-2.5-pro: 뭘한건지 보고해줘",
-      "description": "<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"server/index.ts\"}</parameter>\n</invoke>\n\n<invoke name=\"file_read\">\n<parameter name=\"arguments\">{\"path\": \"package.json\"}</parameter>\n</in",
-      "status": "completed",
-      "source": "agent",
-      "relatedFiles": [
-        "server/index.ts",
-        "package.json",
-        "DEPLOY.md",
-        "vite.config.ts",
-        ".env.example",
-        "src/client/components/Lobby.tsx",
-        "src/client/components/Game.tsx",
-        "tsconfig.node.json"
-      ],
-      "tags": [
-        "gemini-2.5-pro",
-        "code_implementation"
-      ],
-      "id": "d-1777587292818-mnxd",
-      "createdAt": "2026-04-30T22:14:52.818Z",
-      "updatedAt": "2026-05-01T00:17:29.007Z"
-    },
-    {
-      "type": "general",
-      "title": "User request: Continue from where you left off. Complete any remaining work.",
-      "description": "Continue from where you left off. Complete any remaining work.",
-      "status": "completed",
-      "source": "user",
-      "id": "d-1777587295088-lriz",
-      "createdAt": "2026-04-30T22:14:55.088Z",
-      "updatedAt": "2026-04-30T22:15:46.553Z"
-    },
-    {
-      "type": "feature",
-      "title": "gemini-2.5-pro: Continue from where you left off. Complete any remaining work.",
-      "description": "Now I have a complete picture. Let me create the implementation plan and fix all the issues for Render.com deployment.\n\n**Key issues to fix:**\n\n1. **Hardcoded `localhost:3001`** in both `Lobby.tsx` (l",
-      "status": "completed",
-      "source": "agent",
-      "relatedFiles": [
-        "server/index.ts",
-        "package.json",
-        "DEPLOY.md",
-        "vite.config.ts",
-        ".env.example",
-        "src/client/components/Lobby.tsx",
-        "server.log",
-        "src/client/components/Game.tsx",
-        "tsconfig.json"
-      ],
-      "tags": [
-        "gemini-2.5-pro",
-        "code_implementation"
-      ],
-      "id": "d-1777587346292-9dp5",
-      "createdAt": "2026-04-30T22:15:46.292Z",
-      "updatedAt": "2026-05-01T00:17:29.007Z"
-    },
     {
       "type": "general",
       "title": "User request: Continue from where you left off. Complete any remaining work.",
@@ -3409,6 +3242,126 @@
       "id": "d-1778231181752-2nw2",
       "createdAt": "2026-05-08T09:06:21.752Z",
       "updatedAt": "2026-05-08T09:06:21.752Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 플레이 시작하면 스크롤은 막아야 하고. 터치패널 위치는 좋은데  게임하면이 겹쳐 보여 사이즈를 조금 줄이고 우측상단에 상대편 플레이 화면을 오버",
+      "description": "플레이 시작하면 스크롤은 막아야 하고. 터치패널 위치는 좋은데  게임하면이 겹쳐 보여 사이즈를 조금 줄이고 우측상단에 상대편 플레이 화면을 오버레이 방식으로 보여줘. 스크린캡처와 너의 기획안은 너무 달라..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778231685696-fv7d",
+      "createdAt": "2026-05-08T09:14:45.696Z",
+      "updatedAt": "2026-05-08T09:14:45.696Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 플레이 시작하면 스크롤은 막아야 하고. 터치패널 위치는 좋은데  게임하면이 겹쳐 보여 사이즈를 조금 줄이고 우측상단에 상대편 플레이 화면을 오버",
+      "description": "플레이 시작하면 스크롤은 막아야 하고. 터치패널 위치는 좋은데  게임하면이 겹쳐 보여 사이즈를 조금 줄이고 우측상단에 상대편 플레이 화면을 오버레이 방식으로 보여줘. 스크린캡처와 너의 기획안은 너무 달라..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778231711062-688p",
+      "createdAt": "2026-05-08T09:15:11.062Z",
+      "updatedAt": "2026-05-08T09:15:11.062Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 플레이 시작하면 스크롤은 막아야 하고. 터치패널 위치는 좋은데  게임하면이 겹쳐 보여 사이즈를 조금 줄이고 우측상단에 상대편 플레이 화면을 오버",
+      "description": "플레이 시작하면 스크롤은 막아야 하고. 터치패널 위치는 좋은데  게임하면이 겹쳐 보여 사이즈를 조금 줄이고 우측상단에 상대편 플레이 화면을 오버레이 방식으로 보여줘. 스크린캡처와 너의 기획안은 너무 달라..",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778237707718-7hy1",
+      "createdAt": "2026-05-08T10:55:07.718Z",
+      "updatedAt": "2026-05-08T10:55:07.718Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 1 계속 진행",
+      "description": "1 계속 진행",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778237848186-s1x4",
+      "createdAt": "2026-05-08T10:57:28.186Z",
+      "updatedAt": "2026-05-08T10:57:28.186Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 이 전 작업 마친거야?",
+      "description": "이 전 작업 마친거야?",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778238576071-1jm1",
+      "createdAt": "2026-05-08T11:09:36.071Z",
+      "updatedAt": "2026-05-08T11:09:36.071Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 구현하는데 게임답게 화면이 위아래로 스크롤이 되면 안돼. 모바일 환경에서 화면 스크롤되지 않고 화면안에 모두 보이도록하고 불필요한건 안보여줘도 ",
+      "description": "구현하는데 게임답게 화면이 위아래로 스크롤이 되면 안돼. 모바일 환경에서 화면 스크롤되지 않고 화면안에 모두 보이도록하고 불필요한건 안보여줘도 돼.. \n\n그리고 로그인 기능 추가해줘. 유저별로 전적관리를 해줘. 몇전 몇승 몇패.. 승률\n\n그리고 리더보드 만들어줘. 리더보드 페이지에 랭킹을 보여줘야해.\n\n이 내용을 포함해서 구현계획을 수립하고 상기 계획에 추가해서 진행해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778238627149-3azz",
+      "createdAt": "2026-05-08T11:10:27.149Z",
+      "updatedAt": "2026-05-08T11:10:27.149Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 1. 로그인 방식에 대한 확인 현재 계획은 닉네임만 입력하는 간편 로그인입니다. 비밀번호 없이 닉네임만으로 로그인하고, 동일 닉네임이면 이전 전",
+      "description": "1. 로그인 방식에 대한 확인 현재 계획은 닉네임만 입력하는 간편 로그인입니다. 비밀번호 없이 닉네임만으로 로그인하고, 동일 닉네임이면 이전 전적을 불러옵니다. 이 방식으로 진행할까요? 아니면 비밀번호나 다른 인증 방식을 원하시나요?\n네..\n\n2. 리더보드 접근 방식 리더보드는 로비 화면에서 버튼을 눌러 별도 페이지로 이동하는 방식으로 계획했습니다. 게임 중에도 리더보드를 볼 수 있게 할까요, 아니면 로비에서만 접근 가능하게 할까요?\n-->로비에서 리더보드 접근, 게임마치고 리더보드 접근 가능하게\n\n3. 전적 초기화 전적을 초기화(",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778239221064-xhgy",
+      "createdAt": "2026-05-08T11:20:21.064Z",
+      "updatedAt": "2026-05-08T11:20:21.064Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 1. 로그인 방식에 대한 확인 현재 계획은 닉네임만 입력하는 간편 로그인입니다. 비밀번호 없이 닉네임만으로 로그인하고, 동일 닉네임이면 이전 전",
+      "description": "1. 로그인 방식에 대한 확인 현재 계획은 닉네임만 입력하는 간편 로그인입니다. 비밀번호 없이 닉네임만으로 로그인하고, 동일 닉네임이면 이전 전적을 불러옵니다. 이 방식으로 진행할까요? 아니면 비밀번호나 다른 인증 방식을 원하시나요?\n네..\n\n2. 리더보드 접근 방식 리더보드는 로비 화면에서 버튼을 눌러 별도 페이지로 이동하는 방식으로 계획했습니다. 게임 중에도 리더보드를 볼 수 있게 할까요, 아니면 로비에서만 접근 가능하게 할까요?\n-->로비에서 리더보드 접근, 게임마치고 리더보드 접근 가능하게\n\n3. 전적 초기화 전적을 초기화(",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778239550038-vbc9",
+      "createdAt": "2026-05-08T11:25:50.038Z",
+      "updatedAt": "2026-05-08T11:25:50.038Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 1. 로그인 방식에 대한 확인 현재 계획은 닉네임만 입력하는 간편 로그인입니다. 비밀번호 없이 닉네임만으로 로그인하고, 동일 닉네임이면 이전 전",
+      "description": "1. 로그인 방식에 대한 확인 현재 계획은 닉네임만 입력하는 간편 로그인입니다. 비밀번호 없이 닉네임만으로 로그인하고, 동일 닉네임이면 이전 전적을 불러옵니다. 이 방식으로 진행할까요? 아니면 비밀번호나 다른 인증 방식을 원하시나요?\n네..\n\n2. 리더보드 접근 방식 리더보드는 로비 화면에서 버튼을 눌러 별도 페이지로 이동하는 방식으로 계획했습니다. 게임 중에도 리더보드를 볼 수 있게 할까요, 아니면 로비에서만 접근 가능하게 할까요?\n-->로비에서 리더보드 접근, 게임마치고 리더보드 접근 가능하게\n\n3. 전적 초기화 전적을 초기화(",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778239719566-49tl",
+      "createdAt": "2026-05-08T11:28:39.566Z",
+      "updatedAt": "2026-05-08T11:28:39.566Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 1. 로그인 방식에 대한 확인 현재 계획은 닉네임만 입력하는 간편 로그인입니다. 비밀번호 없이 닉네임만으로 로그인하고, 동일 닉네임이면 이전 전",
+      "description": "1. 로그인 방식에 대한 확인 현재 계획은 닉네임만 입력하는 간편 로그인입니다. 비밀번호 없이 닉네임만으로 로그인하고, 동일 닉네임이면 이전 전적을 불러옵니다. 이 방식으로 진행할까요? 아니면 비밀번호나 다른 인증 방식을 원하시나요?\n네..\n\n2. 리더보드 접근 방식 리더보드는 로비 화면에서 버튼을 눌러 별도 페이지로 이동하는 방식으로 계획했습니다. 게임 중에도 리더보드를 볼 수 있게 할까요, 아니면 로비에서만 접근 가능하게 할까요?\n-->로비에서 리더보드 접근, 게임마치고 리더보드 접근 가능하게\n\n3. 전적 초기화 전적을 초기화(",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778240151408-czzj",
+      "createdAt": "2026-05-08T11:35:51.408Z",
+      "updatedAt": "2026-05-08T11:35:51.408Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 완료 한거야?",
+      "description": "완료 한거야?",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778240387760-aloy",
+      "createdAt": "2026-05-08T11:39:47.760Z",
+      "updatedAt": "2026-05-08T11:39:47.760Z"
+    },
+    {
+      "type": "general",
+      "title": "User request: 배포해줘",
+      "description": "배포해줘",
+      "status": "pending",
+      "source": "user",
+      "id": "d-1778240510316-kkad",
+      "createdAt": "2026-05-08T11:41:50.316Z",
+      "updatedAt": "2026-05-08T11:41:50.316Z"
     }
   ],
   "stageHistory": [
